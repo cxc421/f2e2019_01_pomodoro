@@ -28,7 +28,7 @@ const PageArea = styled.div`
   background: white;
   width: 56%;
   padding: 68px 114px 68px 80px;
-  padding: 68px 80px;
+  padding: 68px 60px;
 `;
 
 const App: React.FC = () => {
