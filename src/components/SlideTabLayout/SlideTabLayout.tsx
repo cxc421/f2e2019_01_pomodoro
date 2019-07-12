@@ -98,7 +98,7 @@ const SlideTabLayout: React.FC<SlideTabLayoutProps> = ({ pages }) => {
   function onClickTab(index: number) {
     if (tabIndex !== index) {
       setTabIndex(index);
-      setAnimating(true);
+      // setAnimating(true);
     }
   }
 

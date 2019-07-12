@@ -16,6 +16,12 @@
   font-weight: 300;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body,
 #root {

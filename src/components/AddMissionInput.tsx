@@ -6,13 +6,14 @@ const inputHeight = 70;
 
 const Container = styled.form`
   position: relative;
-  width: calc(100% - 3px);
-  height: ${inputHeight}px;
+  /* width: calc(100% - 3px); */
+  width: 100%;
+  /* height: ${inputHeight}px; */
   background: white;
   display: flex;
   color: ${props => props.theme.color};
   border: solid 1px #707070;
-  box-sizing: content-box;
+  /* box-sizing: content-box; */
 `;
 
 const Input = styled.input`
