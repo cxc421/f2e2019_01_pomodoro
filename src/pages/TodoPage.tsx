@@ -1,20 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
+import AddMissionInput from '../components/AddMissionInput';
 
 const Container = styled.div`
   position: relative;
   background: whitesmoke;
   width: 100%;
   height: 100%;
-  /* color: white; */
   font-size: 30px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 `;
 
 const TodoPage = () => {
-  return <Container>TODO</Container>;
+  return (
+    <Container>
+      <AddMissionInput />
+    </Container>
+  );
 };
 
 export default TodoPage;
