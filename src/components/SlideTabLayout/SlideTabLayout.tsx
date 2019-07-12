@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
 import styled, { keyframes, css as _css } from 'styled-components';
 import { IconType } from 'react-icons';
+import Tab from './Tab';
 
 const Container = styled.div`
   position: relative;
   /* overflow-x: hidden; */
   /* background: lightgreen; */
   height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const PageArea = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   overflow-x: hidden;
+  flex-grow: 1;
+
   display: flex;
 `;
 
@@ -47,11 +52,22 @@ const PageWrapper = styled.div<Animating>`
 `;
 
 const MenuArea = styled.div`
+  position: relative;
+  /* background: pink; */
+  min-height: 20px;
+  margin-bottom: 60px;
+  /* display: flex; */
+  white-space: nowrap;
+`;
+
+const TabBottom = styled.div`
+  height: 5px;
+  background: #f44336;
+  transition: transform 0.5s ease-in-out;
+  transform: translateX(0);
   position: absolute;
-  transform: translateY(-100%);
-  top: 0;
+  bottom: 0;
   left: 0;
-  background: pink;
 `;
 
 interface Page {
@@ -65,8 +81,16 @@ interface SlideTabLayoutProps {
 }
 
 const SlideTabLayout: React.FC<SlideTabLayoutProps> = ({ pages }) => {
+  const tabSize = 157;
+  const tabMargin = 22;
   const [tabIndex, setTabIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
+
+  const tabBottomStyle: React.CSSProperties = {
+    width: tabSize,
+    transform: `translateX(${(tabSize + tabMargin) * tabIndex}px)`
+  };
+
   const pageWrapperStyle: React.CSSProperties = {
     transform: `translateX(${-100 * tabIndex}%)`
   };
@@ -85,11 +109,18 @@ const SlideTabLayout: React.FC<SlideTabLayoutProps> = ({ pages }) => {
   return (
     <Container>
       <MenuArea>
-        {pages.map(({ tabText }, index) => (
-          <button key={index} onClick={() => onClickTab(index)}>
-            {tabText}
-          </button>
+        {pages.map(({ tabText, TabIcon }, index) => (
+          <Tab
+            width={tabSize}
+            margin={tabMargin}
+            key={index}
+            text={tabText}
+            icon={<TabIcon />}
+            isSelect={tabIndex === index}
+            onClick={() => onClickTab(index)}
+          />
         ))}
+        <TabBottom style={tabBottomStyle} />
       </MenuArea>
       <PageArea>
         {pages.map(({ Page }, index) => (
