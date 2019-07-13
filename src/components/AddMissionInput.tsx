@@ -5,6 +5,7 @@ import { MdAdd } from 'react-icons/md';
 const inputHeight = 70;
 
 const Container = styled.form`
+  flex-shrink: 0;
   position: relative;
   /* width: calc(100% - 3px); */
   width: 100%;

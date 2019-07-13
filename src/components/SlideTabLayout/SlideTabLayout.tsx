@@ -60,6 +60,7 @@ const MenuArea = styled.div`
   white-space: nowrap;
   width: calc(100% - 2 * ${horizontalPadding}px);
   /* background: pink; */
+  flex-shrink: 0;
 `;
 
 const TabBottom = styled.div`
