@@ -20,7 +20,7 @@ const Container = styled.div<HaveStatus>`
   border: solid 5px #ba000d;
   padding: ${props => (props.status === 'pause' ? 5 : 10)}px;
   background: black;
-  z-index: 10;
+  z-index: 1;
 
   > svg {
     position: absolute;
@@ -41,7 +41,7 @@ const InnerCircle = styled.div<HaveStatus>`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  z-index: 30;
+  z-index: 3;
 
   &:hover {
     background: ${props =>
@@ -98,7 +98,8 @@ const Spinner: React.FC<SpinnerProps> = ({ status, percent }) => {
     position: 'absolute',
     top: '50%',
     left: '50%',
-    transform: 'translate(-50%, -50%)'
+    transform: 'translate(-50%, -50%)',
+    zIndex: 2
   };
 
   return (
@@ -117,12 +118,11 @@ const Spinner: React.FC<SpinnerProps> = ({ status, percent }) => {
       </InnerCircle>
       {status === 'playing' && (
         <Ring
-          percent={70}
+          percent={10}
           size={containerSize}
           style={ringStyle}
-          zIndex={20}
           color="#F44336"
-          borderWidth={5 + bWidth * 2}
+          ringWidth={5 + bWidth * 2}
         />
       )}
     </Container>

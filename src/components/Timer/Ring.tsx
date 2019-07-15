@@ -1,106 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-export interface RingProps {
-  size?: number;
+interface RingProps {
   percent: number;
-  borderWidth?: number;
+  size: number;
+  style?: React.CSSProperties;
+  ringWidth?: number;
   color?: string;
-  zIndex?: number;
-  style?: React.CSSProperties | undefined;
 }
 
-const Ring: React.FC<RingProps> = ({
-  size = 0,
+const Ring2: React.FC<RingProps> = ({
   percent,
-  borderWidth = 0,
-  color = 'black',
-  zIndex = 0,
-  style
+  style,
+  size,
+  ringWidth = 10,
+  color = 'black'
 }) => {
-  const radius = size / 2;
+  const ref = useRef<HTMLCanvasElement>(null);
 
-  const containerStyle: React.CSSProperties = Object.assign(
-    {
-      position: 'relative',
-      width: size,
-      height: size,
-      borderRadius: '100%',
-      // background: 'lightgreen',
-      // opacity: 0.5,
-      zIndex
-    },
-    style
-  );
+  function draw() {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const r = size / 2 - ringWidth / 2;
+    if (r <= 0) return;
 
-  const circleStyle: React.CSSProperties = Object.assign(
-    {
-      height: size,
-      overflow: 'hidden',
-      position: 'relative'
-    },
-    percent < 50
-      ? {
-          left: radius,
-          width: radius,
-          borderRadius: `0 ${radius}px ${radius}px 0`
-        }
-      : {
-          left: 0,
-          width: size,
-          borderRadius: 0
-        }
-  );
-  const halfCircleStyle = {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: size,
-    height: radius,
-    border: `solid ${borderWidth}px ${color}`,
-    borderRadius: `${radius}px ${radius}px 0 0`,
-    transformOrigin: `${radius}px ${radius}px`
-  };
+    canvas.width = size;
+    canvas.height = size;
 
-  const rotateHalfCircleStyle: React.CSSProperties = Object.assign(
-    {
-      zIndex: zIndex + 1,
-      transform: `rotate(${-90 + (360 * percent) / 100}deg)`
-    },
-    halfCircleStyle
-  );
+    ctx.beginPath();
+    ctx.save();
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.lineWidth = ringWidth;
+    ctx.strokeStyle = color;
+    ctx.rotate((-90 * Math.PI) / 180);
+    ctx.arc(0, 0, r, 0, ((2 * percent) / 100) * Math.PI);
+    ctx.stroke();
+    ctx.restore();
+  }
 
-  const auxHalfCircleStyle: React.CSSProperties = Object.assign(
-    {
-      zIndex: zIndex + 2,
-      opacity: percent < 50 ? 0 : 1,
-      transform: 'rotate(90deg)'
-    },
-    halfCircleStyle
-  );
+  useEffect(draw);
 
-  const ringCenterStyle: React.CSSProperties = {
-    position: 'absolute',
-    zIndex: zIndex + 3,
-    width: size - borderWidth * 2,
-    height: size - borderWidth * 2,
-    top: borderWidth,
-    left: borderWidth,
-    // top: '50%',
-    // left: '50%',
-    // transform: 'translate(-50%, -50%)',
-    borderRadius: '100%',
-    background: 'black'
-  };
-
-  return (
-    <div style={containerStyle}>
-      <div style={circleStyle}>
-        <div style={rotateHalfCircleStyle} />
-        <div style={auxHalfCircleStyle} />
-      </div>
-      <div style={ringCenterStyle} />
-    </div>
-  );
+  return <canvas ref={ref} style={style} />;
 };
 
-export default React.memo(Ring);
+export default React.memo(Ring2);
