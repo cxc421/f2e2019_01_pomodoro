@@ -33,8 +33,9 @@ const tableHeadHoverCss = _css`
 
 const TableHead = styled.div<TableHeadProps>`
   background: black;
+  height: 32px;
   padding-left: 23.25px;
-  padding-right: 28px;
+  padding-right: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;

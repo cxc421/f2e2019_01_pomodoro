@@ -1,7 +1,7 @@
 import React from 'react';
 import uuid from 'uuid/v1';
 
-interface Task {
+export interface Task {
   id: string;
   text: string;
   doneDate: null | Date;
@@ -30,39 +30,62 @@ interface GlobalState {
   taskStatus: TaskStatus;
   timeMax: number;
   time: number;
-  tasks: Task[];
+  todoTasks: Task[];
+  doneTasks: Task[];
 }
 
 type ContextType = [GlobalState, React.Dispatch<Action>] | null;
 
-const initialTasks: Task[] = [
+const initTodoTasks: Task[] = [
   {
     id: uuid(),
-    text: 'THE FIRST THING TODO',
+    text: '第一件未完成的事',
     doneDate: null,
     tomatoes: [new Date()]
   },
   {
     id: uuid(),
-    text: 'THE SECOND THING TODO',
+    text: '第二件未完成的事',
     doneDate: null,
     tomatoes: []
   },
   {
     id: uuid(),
-    text: 'Complete Thing',
+    text: '第三件未完成的事',
+    doneDate: null,
+    tomatoes: []
+  },
+  {
+    id: uuid(),
+    text: '第四件未完成的事',
+    doneDate: null,
+    tomatoes: []
+  }
+];
+
+const initDoneTasks = [
+  {
+    id: uuid(),
+    text: '第一件完成的事',
     doneDate: new Date(),
-    tomatoes: [new Date(), new Date()]
+    tomatoes: [new Date(), new Date(), new Date()]
+  },
+  {
+    id: uuid(),
+    text: '第二件完成的事',
+    doneDate: new Date(),
+    tomatoes: [new Date(), new Date(), new Date(), new Date()]
   }
 ];
 
 const initialState: GlobalState = {
-  selectTaskId: initialTasks[0].id || '',
+  selectTaskId: initTodoTasks[0].id || '',
   timerStatus: TimerStatus.Stop,
   taskStatus: TaskStatus.Work,
   timeMax: TOTAL_TIME.WORK,
   time: TOTAL_TIME.REST,
-  tasks: initialTasks
+  todoTasks: initTodoTasks,
+  doneTasks: initDoneTasks
 };
 
 const Context = React.createContext<ContextType>(null);
@@ -85,11 +108,11 @@ interface Action {
 function reducer(state: GlobalState, action: Action): GlobalState {
   switch (action.type) {
     case ActionType.SetRandomTaskId: {
-      const len = state.tasks.length;
+      const len = state.todoTasks.length;
       let newId = state.selectTaskId;
       while (newId === state.selectTaskId) {
         const idx = Math.floor(Math.random() * len);
-        newId = state.tasks[idx].id;
+        newId = state.todoTasks[idx].id;
       }
       return {
         ...state,
