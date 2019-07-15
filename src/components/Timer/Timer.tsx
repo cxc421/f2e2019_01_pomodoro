@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Spinner from './Spinner';
-import { useGlobalState } from '../../global-state';
+import { useGlobalState, TimerStatus } from '../../global-state';
 import { secToTimeText } from '../helpers/time';
 
 const Container = styled.div`
@@ -42,14 +42,14 @@ const TaskText = styled.div`
 
 const Timer: React.FC = () => {
   const {
-    state: { selectTaskId, todoTasks, time }
+    state: { selectTaskId, todoTasks, time, timerStatus }
   } = useGlobalState();
   const selectTask = todoTasks.find(task => task.id === selectTaskId);
   const text = selectTask ? selectTask.text : '';
 
   return (
     <Container>
-      <Spinner />
+      <Spinner status="playing" percent={45} />
       <TimeText>{secToTimeText(time)}</TimeText>
       <TaskText>{text}</TaskText>
     </Container>

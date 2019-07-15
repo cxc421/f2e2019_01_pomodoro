@@ -8,7 +8,7 @@ export interface Task {
   tomatoes: Date[];
 }
 
-enum TimerStatus {
+export enum TimerStatus {
   Stop,
   Play,
   Pause

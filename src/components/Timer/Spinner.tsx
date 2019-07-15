@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FaPlay } from 'react-icons/fa';
+import { FaPlay, FaStop } from 'react-icons/fa';
 import { ReactComponent as Logo } from '../../assets/img/Group 20.svg';
+import Ring from './Ring';
 
-const Container = styled.div`
+interface HaveStatus {
+  status: 'playing' | 'pause';
+}
+
+interface SpinnerProps extends HaveStatus {
+  percent: number;
+}
+
+const Container = styled.div<HaveStatus>`
   position: relative;
   width: 215px;
   height: 215px;
   border-radius: 100%;
-  /* background: #ba000d; */
   border: solid 5px #ba000d;
-  padding: 5px;
+  padding: ${props => (props.status === 'pause' ? 5 : 10)}px;
   background: black;
+  z-index: 10;
 
   > svg {
     position: absolute;
@@ -21,19 +30,22 @@ const Container = styled.div`
   }
 `;
 
-const InnerCircle = styled.div`
+const InnerCircle = styled.div<HaveStatus>`
   position: relative;
   width: 100%;
   height: 100%;
-  background: #f44336;
+  background: ${props => (props.status === 'pause' ? '#f44336' : 'white')};
+  border: ${props => (props.status === 'pause' ? 'none' : 'solid 5px #f44336')};
   border-radius: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  z-index: 30;
 
   &:hover {
-    background: #fb6155;
+    background: ${props =>
+      props.status === 'pause' ? '#fb6155' : 'rgb(235,235,235)'};
   }
 `;
 
@@ -47,15 +59,72 @@ const PlayBtn = styled.div`
   }
 `;
 
-const Spinner: React.FC = () => {
+const StopBtn = styled.div`
+  color: white;
+  font-size: 56px;
+  color: #f44336;
+
+  > * {
+    display: block;
+  }
+`;
+
+function useSize(ref: React.RefObject<HTMLDivElement>): number {
+  const [size, setSize] = useState(0);
+
+  useEffect(() => {
+    function calculateSize() {
+      if (ref.current) {
+        const { width, height } = ref.current.getBoundingClientRect();
+        setSize(Math.min(width, height));
+      }
+    }
+    window.addEventListener('resize', calculateSize);
+    calculateSize();
+    return () => {
+      window.removeEventListener('resize', calculateSize);
+    };
+  }, [ref]);
+
+  return size;
+}
+
+const Spinner: React.FC<SpinnerProps> = ({ status, percent }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const bWidth = 3;
+  const containerSize = useSize(containerRef) + 2 * bWidth;
+  console.log({ containerSize });
+  const ringStyle: React.CSSProperties = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
+  };
+
   return (
-    <Container>
+    <Container status={status} ref={containerRef}>
       <Logo />
-      <InnerCircle>
-        <PlayBtn>
-          <FaPlay />
-        </PlayBtn>
+      <InnerCircle status={status}>
+        {status === 'pause' ? (
+          <PlayBtn>
+            <FaPlay />
+          </PlayBtn>
+        ) : (
+          <StopBtn>
+            <FaStop />
+          </StopBtn>
+        )}
       </InnerCircle>
+      {status === 'playing' && (
+        <Ring
+          percent={70}
+          size={containerSize}
+          style={ringStyle}
+          zIndex={20}
+          color="#F44336"
+          borderWidth={5 + bWidth * 2}
+        />
+      )}
     </Container>
   );
 };
