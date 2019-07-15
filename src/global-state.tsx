@@ -83,7 +83,7 @@ const initialState: GlobalState = {
   timerStatus: TimerStatus.Stop,
   taskStatus: TaskStatus.Work,
   timeMax: TOTAL_TIME.WORK,
-  time: TOTAL_TIME.REST,
+  time: TOTAL_TIME.WORK,
   todoTasks: initTodoTasks,
   doneTasks: initDoneTasks
 };

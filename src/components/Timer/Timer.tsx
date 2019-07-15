@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import Spinner from './Spinner';
+import { useGlobalState } from '../../global-state';
+import { secToTimeText } from '../helpers/time';
 
 const Container = styled.div`
   position: relative;
@@ -35,14 +37,21 @@ const TaskText = styled.div`
   color: white;
   margin-top: 17px;
   letter-spacing: 1px;
+  transform: translateY(3px);
 `;
 
 const Timer: React.FC = () => {
+  const {
+    state: { selectTaskId, todoTasks, time }
+  } = useGlobalState();
+  const selectTask = todoTasks.find(task => task.id === selectTaskId);
+  const text = selectTask ? selectTask.text : '';
+
   return (
     <Container>
       <Spinner />
-      <TimeText>25:00</TimeText>
-      <TaskText>THE FIRST THING TO DO</TaskText>
+      <TimeText>{secToTimeText(time)}</TimeText>
+      <TaskText>{text}</TaskText>
     </Container>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { MdList, MdSettings, MdRadioButtonChecked } from 'react-icons/md';
+import { MdList, MdSettings } from 'react-icons/md';
+import { FaBullseye } from 'react-icons/fa';
 import Timer from './components/Timer/Timer';
 import SlideTabLayout from './components/SlideTabLayout/SlideTabLayout';
 import TodoPage from './pages/TodoPage';
@@ -40,7 +41,7 @@ const App: React.FC = () => {
     },
     {
       tabText: 'ANALYTICS',
-      TabIcon: MdRadioButtonChecked,
+      TabIcon: FaBullseye,
       Page: AnalyticPage
     },
     {

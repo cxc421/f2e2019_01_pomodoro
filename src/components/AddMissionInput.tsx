@@ -59,7 +59,7 @@ const AddMissionInput: React.FC = () => {
 
   return (
     <Container onSubmit={onSubmit}>
-      <Input placeholder="ADD A NEW MISSION…" />
+      <Input placeholder="ADD NEW MISSION…" />
       <ApplyBtn onClick={onSubmit}>
         <MdAdd />
       </ApplyBtn>
