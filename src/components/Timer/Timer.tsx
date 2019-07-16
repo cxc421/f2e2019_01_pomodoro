@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Spinner from './Spinner';
+import Popup from '../Popup';
 import { useGlobalState, TimerStatus } from '../../global-state';
 import { secToTimeText } from '../helpers/time';
 
@@ -43,7 +44,8 @@ const Timer: React.FC = () => {
   const {
     state: { selectTaskId, todoTasks, time, timeMax, timerStatus },
     startTimer,
-    pauseTimer
+    pauseTimer,
+    cancelTimer
   } = useGlobalState();
   const timeInSec = Math.round(time / 1000);
   const selectTask = todoTasks.find(task => task.id === selectTaskId);
@@ -59,11 +61,15 @@ const Timer: React.FC = () => {
       case TimerStatus.Play:
         pauseTimer();
         break;
-      // Test Only
-      case TimerStatus.Pause:
-        startTimer(selectTaskId);
-        break;
     }
+  }
+
+  function onClickPropupCancelBtn() {
+    startTimer(selectTaskId);
+  }
+
+  function onClickPopupApplyBtn() {
+    cancelTimer();
   }
 
   return (
@@ -71,6 +77,11 @@ const Timer: React.FC = () => {
       <Spinner status={status} percent={percent} onClick={onClickSpinner} />
       <TimeText>{secToTimeText(timeInSec)}</TimeText>
       <TaskText>{text}</TaskText>
+      <Popup
+        show={timerStatus === TimerStatus.Pause}
+        onClickCancelBtn={onClickPropupCancelBtn}
+        onClickApplyBtn={onClickPopupApplyBtn}
+      />
     </Container>
   );
 };

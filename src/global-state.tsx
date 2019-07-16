@@ -102,27 +102,16 @@ enum ActionType {
   SetTime
 }
 
-type StartTaskAction = { type: ActionType.StartTask; taskId: string };
 type SetTimeAction = { type: ActionType.SetTime; time: number };
 type SetTimerStatusAction = {
   type: ActionType.SetTimerStatus;
   timerStatus: TimerStatus;
 };
 
-type Action = StartTaskAction | SetTimeAction | SetTimerStatusAction;
+type Action = SetTimeAction | SetTimerStatusAction;
 
 function reducer(state: GlobalState, action: Action): GlobalState {
   switch (action.type) {
-    case ActionType.StartTask: {
-      const taskId = action.taskId;
-      // const isWork = state.taskStatus === TaskStatus.Work;
-      // const timeMax = isWork ? TOTAL_TIME.WORK : TOTAL_TIME.REST;
-      return {
-        ...state,
-        selectTaskId: taskId,
-        timerStatus: TimerStatus.Play
-      };
-    }
     case ActionType.SetTimerStatus: {
       return {
         ...state,
@@ -165,6 +154,18 @@ export function useGlobalState() {
     });
   };
 
+  const cancelTimer = () => {
+    setPrevTimeStamp(null);
+    dispatch({
+      type: ActionType.SetTimerStatus,
+      timerStatus: TimerStatus.Stop
+    });
+    dispatch({
+      type: ActionType.SetTime,
+      time: TOTAL_TIME.WORK
+    });
+  };
+
   React.useEffect(() => {
     if (
       timerStatus === TimerStatus.Play &&
@@ -182,6 +183,7 @@ export function useGlobalState() {
   return {
     state,
     startTimer,
-    pauseTimer
+    pauseTimer,
+    cancelTimer
   };
 }
