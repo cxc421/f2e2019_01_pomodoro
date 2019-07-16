@@ -9,7 +9,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* padding: 20px 55px; */
 `;
 
 const TimeText = styled.div`
@@ -42,15 +41,35 @@ const TaskText = styled.div`
 
 const Timer: React.FC = () => {
   const {
-    state: { selectTaskId, todoTasks, time, timerStatus }
+    state: { selectTaskId, todoTasks, time, timeMax, timerStatus },
+    startTimer,
+    pauseTimer
   } = useGlobalState();
+  const timeInSec = Math.round(time / 1000);
   const selectTask = todoTasks.find(task => task.id === selectTaskId);
   const text = selectTask ? selectTask.text : '';
+  const percent = (time * 100) / timeMax;
+  const status = timerStatus === TimerStatus.Stop ? 'pause' : 'playing';
+
+  function onClickSpinner() {
+    switch (timerStatus) {
+      case TimerStatus.Stop:
+        startTimer(selectTaskId);
+        break;
+      case TimerStatus.Play:
+        pauseTimer();
+        break;
+      // Test Only
+      case TimerStatus.Pause:
+        startTimer(selectTaskId);
+        break;
+    }
+  }
 
   return (
     <Container>
-      <Spinner status="playing" percent={45} />
-      <TimeText>{secToTimeText(time)}</TimeText>
+      <Spinner status={status} percent={percent} onClick={onClickSpinner} />
+      <TimeText>{secToTimeText(timeInSec)}</TimeText>
       <TaskText>{text}</TaskText>
     </Container>
   );

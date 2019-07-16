@@ -73,7 +73,7 @@ function useContentHeight(contentRef: React.RefObject<HTMLDivElement>) {
         const prevHeight = contentRef.current.style.height;
         contentRef.current.style.height = 'auto';
         const height = contentRef.current.getBoundingClientRect().height;
-        console.log(height);
+        // console.log(height);
         contentRef.current.style.height = prevHeight;
         setContentHeight(height);
       }

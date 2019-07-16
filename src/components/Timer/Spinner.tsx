@@ -10,6 +10,7 @@ interface HaveStatus {
 
 interface SpinnerProps extends HaveStatus {
   percent: number;
+  onClick: () => void;
 }
 
 const Container = styled.div<HaveStatus>`
@@ -89,11 +90,11 @@ function useSize(ref: React.RefObject<HTMLDivElement>): number {
   return size;
 }
 
-const Spinner: React.FC<SpinnerProps> = ({ status, percent }) => {
+const Spinner: React.FC<SpinnerProps> = ({ status, percent, onClick }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const bWidth = 3;
   const containerSize = useSize(containerRef) + 2 * bWidth;
-  console.log({ containerSize });
+  // console.log({ containerSize });
   const ringStyle: React.CSSProperties = {
     position: 'absolute',
     top: '50%',
@@ -105,7 +106,7 @@ const Spinner: React.FC<SpinnerProps> = ({ status, percent }) => {
   return (
     <Container status={status} ref={containerRef}>
       <Logo />
-      <InnerCircle status={status}>
+      <InnerCircle status={status} onClick={onClick}>
         {status === 'pause' ? (
           <PlayBtn>
             <FaPlay />
@@ -118,7 +119,7 @@ const Spinner: React.FC<SpinnerProps> = ({ status, percent }) => {
       </InnerCircle>
       {status === 'playing' && (
         <Ring
-          percent={10}
+          percent={percent}
           size={containerSize}
           style={ringStyle}
           color="#F44336"

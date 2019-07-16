@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import uuid from 'uuid/v1';
 
 export interface Task {
@@ -20,8 +20,8 @@ enum TaskStatus {
 }
 
 enum TOTAL_TIME {
-  WORK = 25 * 60,
-  REST = 5 * 60
+  WORK = 25 * 60 * 1000,
+  REST = 5 * 60 * 1000
 }
 
 interface GlobalState {
@@ -97,26 +97,42 @@ export function GlobalStateProvider(props: object): JSX.Element {
 }
 
 enum ActionType {
-  SetRandomTaskId
+  StartTask,
+  SetTimerStatus,
+  SetTime
 }
 
-interface Action {
-  type: ActionType;
-  payload?: any;
-}
+type StartTaskAction = { type: ActionType.StartTask; taskId: string };
+type SetTimeAction = { type: ActionType.SetTime; time: number };
+type SetTimerStatusAction = {
+  type: ActionType.SetTimerStatus;
+  timerStatus: TimerStatus;
+};
+
+type Action = StartTaskAction | SetTimeAction | SetTimerStatusAction;
 
 function reducer(state: GlobalState, action: Action): GlobalState {
   switch (action.type) {
-    case ActionType.SetRandomTaskId: {
-      const len = state.todoTasks.length;
-      let newId = state.selectTaskId;
-      while (newId === state.selectTaskId) {
-        const idx = Math.floor(Math.random() * len);
-        newId = state.todoTasks[idx].id;
-      }
+    case ActionType.StartTask: {
+      const taskId = action.taskId;
+      // const isWork = state.taskStatus === TaskStatus.Work;
+      // const timeMax = isWork ? TOTAL_TIME.WORK : TOTAL_TIME.REST;
       return {
         ...state,
-        selectTaskId: newId
+        selectTaskId: taskId,
+        timerStatus: TimerStatus.Play
+      };
+    }
+    case ActionType.SetTimerStatus: {
+      return {
+        ...state,
+        timerStatus: action.timerStatus
+      };
+    }
+    case ActionType.SetTime: {
+      return {
+        ...state,
+        time: action.time
       };
     }
     default:
@@ -130,12 +146,42 @@ export function useGlobalState() {
     throw new Error(`useGlobalState must be used within a GlobalStateProvider`);
   }
   const [state, dispatch] = context;
+  const { timerStatus, time } = state;
+  const [prevTimeStamp, setPrevTimeStamp] = useState<null | number>(null);
 
-  const setRandomSelectTask = () =>
-    dispatch({ type: ActionType.SetRandomTaskId });
+  const startTimer = (taskId: string) => {
+    setPrevTimeStamp(Date.now());
+    dispatch({
+      type: ActionType.SetTimerStatus,
+      timerStatus: TimerStatus.Play
+    });
+  };
+
+  const pauseTimer = () => {
+    setPrevTimeStamp(null);
+    dispatch({
+      type: ActionType.SetTimerStatus,
+      timerStatus: TimerStatus.Pause
+    });
+  };
+
+  React.useEffect(() => {
+    if (
+      timerStatus === TimerStatus.Play &&
+      time > 0 &&
+      prevTimeStamp !== null
+    ) {
+      const curTimeStamp = Date.now();
+      const diff = curTimeStamp - prevTimeStamp;
+      const newTime = time - diff;
+      dispatch({ type: ActionType.SetTime, time: newTime > 0 ? newTime : 0 });
+      setPrevTimeStamp(curTimeStamp);
+    }
+  }, [timerStatus, time, prevTimeStamp, dispatch]);
 
   return {
     state,
-    setRandomSelectTask
+    startTimer,
+    pauseTimer
   };
 }

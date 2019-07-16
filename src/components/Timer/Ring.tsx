@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface RingProps {
   percent: number;
@@ -8,7 +8,7 @@ interface RingProps {
   color?: string;
 }
 
-const Ring2: React.FC<RingProps> = ({
+const Ring: React.FC<RingProps> = ({
   percent,
   style,
   size,
@@ -44,4 +44,4 @@ const Ring2: React.FC<RingProps> = ({
   return <canvas ref={ref} style={style} />;
 };
 
-export default React.memo(Ring2);
+export default React.memo(Ring);
