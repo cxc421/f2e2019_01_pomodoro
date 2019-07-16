@@ -8,17 +8,21 @@ interface HaveStatus {
   status: 'playing' | 'pause';
 }
 
-interface SpinnerProps extends HaveStatus {
+interface HaveTheme {
+  theme: 'red' | 'yellow';
+}
+
+interface SpinnerProps extends HaveStatus, HaveTheme {
   percent: number;
   onClick: () => void;
 }
 
-const Container = styled.div<HaveStatus>`
+const Container = styled.div<HaveStatus & HaveTheme>`
   position: relative;
   width: 215px;
   height: 215px;
   border-radius: 100%;
-  border: solid 5px #ba000d;
+  border: solid 5px ${props => (props.theme === 'red' ? '#ba000d' : '#C77800')};
   padding: ${props => (props.status === 'pause' ? 5 : 10)}px;
   background: black;
   z-index: 1;
@@ -31,12 +35,22 @@ const Container = styled.div<HaveStatus>`
   }
 `;
 
-const InnerCircle = styled.div<HaveStatus>`
+const InnerCircle = styled.div<HaveStatus & HaveTheme>`
   position: relative;
   width: 100%;
   height: 100%;
-  background: ${props => (props.status === 'pause' ? '#f44336' : 'white')};
-  border: ${props => (props.status === 'pause' ? 'none' : 'solid 5px #f44336')};
+  background: ${props =>
+    props.status === 'pause'
+      ? props.theme === 'red'
+        ? '#f44336'
+        : '#FFA726'
+      : 'white'};
+  border: ${props =>
+    props.status === 'pause'
+      ? 'none'
+      : props.theme === 'red'
+      ? 'solid 5px #f44336'
+      : 'solid 5px #FFA726'};
   border-radius: 100%;
   display: flex;
   justify-content: center;
@@ -46,7 +60,11 @@ const InnerCircle = styled.div<HaveStatus>`
 
   &:hover {
     background: ${props =>
-      props.status === 'pause' ? '#fb6155' : 'rgb(235,235,235)'};
+      props.status !== 'pause'
+        ? 'rgb(235,235,235)'
+        : props.theme === 'red'
+        ? '#fb6155'
+        : '#ffb447'};
   }
 `;
 
@@ -60,10 +78,10 @@ const PlayBtn = styled.div`
   }
 `;
 
-const StopBtn = styled.div`
+const StopBtn = styled.div<HaveTheme>`
   color: white;
   font-size: 56px;
-  color: #f44336;
+  color: ${props => (props.theme === 'red' ? '#f44336' : '#FFA726')};
 
   > * {
     display: block;
@@ -90,7 +108,12 @@ function useSize(ref: React.RefObject<HTMLDivElement>): number {
   return size;
 }
 
-const Spinner: React.FC<SpinnerProps> = ({ status, percent, onClick }) => {
+const Spinner: React.FC<SpinnerProps> = ({
+  theme = 'red',
+  status,
+  percent,
+  onClick
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const bWidth = 3;
   const containerSize = useSize(containerRef) + 2 * bWidth;
@@ -104,15 +127,15 @@ const Spinner: React.FC<SpinnerProps> = ({ status, percent, onClick }) => {
   };
 
   return (
-    <Container status={status} ref={containerRef}>
+    <Container theme={theme} status={status} ref={containerRef}>
       <Logo />
-      <InnerCircle status={status} onClick={onClick}>
+      <InnerCircle theme={theme} status={status} onClick={onClick}>
         {status === 'pause' ? (
           <PlayBtn>
             <FaPlay />
           </PlayBtn>
         ) : (
-          <StopBtn>
+          <StopBtn theme={theme}>
             <FaStop />
           </StopBtn>
         )}
@@ -122,7 +145,7 @@ const Spinner: React.FC<SpinnerProps> = ({ status, percent, onClick }) => {
           percent={percent}
           size={containerSize}
           style={ringStyle}
-          color="#F44336"
+          color={theme === 'red' ? '#F44336' : 'rgb(255, 167, 39)'}
           ringWidth={5 + bWidth * 2}
         />
       )}

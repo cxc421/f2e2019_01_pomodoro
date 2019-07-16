@@ -14,14 +14,16 @@ export enum TimerStatus {
   Pause
 }
 
-enum TaskStatus {
+export enum TaskStatus {
   Work,
   Rest
 }
 
 enum TOTAL_TIME {
-  WORK = 25 * 60 * 1000,
-  REST = 5 * 60 * 1000
+  // WORK = 25 * 60 * 1000,
+  // REST = 5 * 60 * 1000
+  WORK = 10 * 1000,
+  REST = 5 * 1000
 }
 
 interface GlobalState {
@@ -54,13 +56,13 @@ const initTodoTasks: Task[] = [
     text: '第三件未完成的事',
     doneDate: null,
     tomatoes: []
-  },
-  {
-    id: uuid(),
-    text: '第四件未完成的事',
-    doneDate: null,
-    tomatoes: []
   }
+  // {
+  //   id: uuid(),
+  //   text: '第四件未完成的事',
+  //   doneDate: null,
+  //   tomatoes: []
+  // }
 ];
 
 const initDoneTasks = [
@@ -84,6 +86,9 @@ const initialState: GlobalState = {
   taskStatus: TaskStatus.Work,
   timeMax: TOTAL_TIME.WORK,
   time: TOTAL_TIME.WORK,
+  // taskStatus: TaskStatus.Rest,
+  // timeMax: TOTAL_TIME.REST,
+  // time: TOTAL_TIME.REST,
   todoTasks: initTodoTasks,
   doneTasks: initDoneTasks
 };
@@ -97,9 +102,10 @@ export function GlobalStateProvider(props: object): JSX.Element {
 }
 
 enum ActionType {
-  StartTask,
   SetTimerStatus,
-  SetTime
+  SetTime,
+  SetTaskStatus,
+  AddNewTodoTask
 }
 
 type SetTimeAction = { type: ActionType.SetTime; time: number };
@@ -107,8 +113,20 @@ type SetTimerStatusAction = {
   type: ActionType.SetTimerStatus;
   timerStatus: TimerStatus;
 };
+type SetTaskStatusAction = {
+  type: ActionType.SetTaskStatus;
+  taskStatus: TaskStatus;
+};
+type AddNewTodoTaskAction = {
+  type: ActionType.AddNewTodoTask;
+  text: string;
+};
 
-type Action = SetTimeAction | SetTimerStatusAction;
+type Action =
+  | SetTimeAction
+  | SetTimerStatusAction
+  | SetTaskStatusAction
+  | AddNewTodoTaskAction;
 
 function reducer(state: GlobalState, action: Action): GlobalState {
   switch (action.type) {
@@ -124,6 +142,30 @@ function reducer(state: GlobalState, action: Action): GlobalState {
         time: action.time
       };
     }
+    case ActionType.SetTaskStatus: {
+      const timeMax =
+        action.taskStatus === TaskStatus.Work
+          ? TOTAL_TIME.WORK
+          : TOTAL_TIME.REST;
+      return {
+        ...state,
+        taskStatus: action.taskStatus,
+        timeMax,
+        time: timeMax
+      };
+    }
+    case ActionType.AddNewTodoTask: {
+      const newTask: Task = {
+        id: uuid(),
+        text: action.text,
+        doneDate: null,
+        tomatoes: []
+      };
+      return {
+        ...state,
+        todoTasks: [...state.todoTasks, newTask]
+      };
+    }
     default:
       return state;
   }
@@ -135,8 +177,10 @@ export function useGlobalState() {
     throw new Error(`useGlobalState must be used within a GlobalStateProvider`);
   }
   const [state, dispatch] = context;
-  const { timerStatus, time } = state;
+  const { timerStatus, time, taskStatus } = state;
   const [prevTimeStamp, setPrevTimeStamp] = useState<null | number>(null);
+
+  // console.log({ timeMax: state.timeMax, time });
 
   const startTimer = (taskId: string) => {
     setPrevTimeStamp(Date.now());
@@ -161,29 +205,59 @@ export function useGlobalState() {
       timerStatus: TimerStatus.Stop
     });
     dispatch({
-      type: ActionType.SetTime,
-      time: TOTAL_TIME.WORK
+      type: ActionType.SetTaskStatus,
+      taskStatus
     });
   };
 
-  React.useEffect(() => {
-    if (
-      timerStatus === TimerStatus.Play &&
-      time > 0 &&
-      prevTimeStamp !== null
-    ) {
-      const curTimeStamp = Date.now();
-      const diff = curTimeStamp - prevTimeStamp;
-      const newTime = time - diff;
-      dispatch({ type: ActionType.SetTime, time: newTime > 0 ? newTime : 0 });
-      setPrevTimeStamp(curTimeStamp);
+  const addNewTask = (text: string) => {
+    text = text.trim();
+    if (text.length > 0) {
+      dispatch({
+        type: ActionType.AddNewTodoTask,
+        text
+      });
     }
-  }, [timerStatus, time, prevTimeStamp, dispatch]);
+  };
+
+  React.useEffect(() => {
+    if (timerStatus === TimerStatus.Play && prevTimeStamp !== null) {
+      if (time > 0) {
+        const curTimeStamp = Date.now();
+        const diff = curTimeStamp - prevTimeStamp;
+        const newTime = time - diff;
+        dispatch({ type: ActionType.SetTime, time: newTime > 0 ? newTime : 0 });
+        setPrevTimeStamp(curTimeStamp);
+        return;
+      }
+
+      if (time === 0) {
+        if (taskStatus === TaskStatus.Work) {
+          dispatch({
+            type: ActionType.SetTaskStatus,
+            taskStatus: TaskStatus.Rest
+          });
+          setPrevTimeStamp(Date.now());
+        } else {
+          dispatch({
+            type: ActionType.SetTaskStatus,
+            taskStatus: TaskStatus.Work
+          });
+          dispatch({
+            type: ActionType.SetTimerStatus,
+            timerStatus: TimerStatus.Stop
+          });
+          setPrevTimeStamp(null);
+        }
+      }
+    }
+  }, [timerStatus, time, prevTimeStamp, dispatch, taskStatus]);
 
   return {
     state,
     startTimer,
     pauseTimer,
-    cancelTimer
+    cancelTimer,
+    addNewTask
   };
 }

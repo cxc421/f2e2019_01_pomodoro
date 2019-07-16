@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { MdAdd } from 'react-icons/md';
+import { useGlobalState } from '../global-state';
 
 const inputHeight = 70;
 
@@ -33,6 +34,18 @@ const Input = styled.input`
     opacity: 0.3;
     /* font-style: italic; */
   }
+
+  &:focus {
+    color: #f44336;
+
+    & ~ * {
+      color: #f44336;
+    }
+
+    &::placeholder {
+      opacity: 0.8;
+    }
+  }
 `;
 
 const ApplyBtn = styled.div`
@@ -52,14 +65,21 @@ const ApplyBtn = styled.div`
 `;
 
 const AddMissionInput: React.FC = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { addNewTask } = useGlobalState();
+
   function onSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
-    console.log('submit');
+    const input = inputRef.current;
+    if (input) {
+      addNewTask(input.value);
+      input.value = '';
+    }
   }
 
   return (
     <Container onSubmit={onSubmit}>
-      <Input placeholder="ADD NEW MISSION…" />
+      <Input placeholder="ADD NEW MISSION…" ref={inputRef} />
       <ApplyBtn onClick={onSubmit}>
         <MdAdd />
       </ApplyBtn>
@@ -67,4 +87,4 @@ const AddMissionInput: React.FC = () => {
   );
 };
 
-export default AddMissionInput;
+export default React.memo(AddMissionInput);

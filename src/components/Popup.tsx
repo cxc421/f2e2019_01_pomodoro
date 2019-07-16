@@ -4,6 +4,7 @@ import { Transition } from 'react-transition-group';
 
 interface PopupProps {
   show: boolean;
+  text?: string;
   onClickCancelBtn: () => void;
   onClickApplyBtn: () => void;
 }
@@ -124,6 +125,7 @@ const ButtonApply = styled.div`
 
 const Popup: React.FC<PopupProps> = ({
   show,
+  text = '',
   onClickCancelBtn,
   onClickApplyBtn
 }) => {
@@ -139,7 +141,7 @@ const Popup: React.FC<PopupProps> = ({
         return (
           <Background state={state}>
             <Modal state={state}>
-              <ModalText>您目前正在進行一個番茄時鐘，確定要放棄嗎？</ModalText>
+              <ModalText>{text}</ModalText>
               <ModalBtoom>
                 <ButtonCancel onClick={onClickCancelBtn}>取消</ButtonCancel>
                 <ButtonApply onClick={onClickApplyBtn}>確定</ButtonApply>

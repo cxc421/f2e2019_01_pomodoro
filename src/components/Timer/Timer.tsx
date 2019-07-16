@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Spinner from './Spinner';
 import Popup from '../Popup';
-import { useGlobalState, TimerStatus } from '../../global-state';
+import { useGlobalState, TimerStatus, TaskStatus } from '../../global-state';
 import { secToTimeText } from '../helpers/time';
 
 const Container = styled.div`
@@ -42,7 +42,7 @@ const TaskText = styled.div`
 
 const Timer: React.FC = () => {
   const {
-    state: { selectTaskId, todoTasks, time, timeMax, timerStatus },
+    state: { selectTaskId, todoTasks, time, timeMax, timerStatus, taskStatus },
     startTimer,
     pauseTimer,
     cancelTimer
@@ -52,6 +52,10 @@ const Timer: React.FC = () => {
   const text = selectTask ? selectTask.text : '';
   const percent = (time * 100) / timeMax;
   const status = timerStatus === TimerStatus.Stop ? 'pause' : 'playing';
+  const popupText =
+    taskStatus === TaskStatus.Work
+      ? '您目前正在進行一個番茄時鐘，確定要放棄嗎？'
+      : '您要放棄休息嗎？';
 
   function onClickSpinner() {
     switch (timerStatus) {
@@ -74,11 +78,17 @@ const Timer: React.FC = () => {
 
   return (
     <Container>
-      <Spinner status={status} percent={percent} onClick={onClickSpinner} />
+      <Spinner
+        status={status}
+        percent={percent}
+        theme={taskStatus === TaskStatus.Work ? 'red' : 'yellow'}
+        onClick={onClickSpinner}
+      />
       <TimeText>{secToTimeText(timeInSec)}</TimeText>
       <TaskText>{text}</TaskText>
       <Popup
         show={timerStatus === TimerStatus.Pause}
+        text={popupText}
         onClickCancelBtn={onClickPropupCancelBtn}
         onClickApplyBtn={onClickPopupApplyBtn}
       />

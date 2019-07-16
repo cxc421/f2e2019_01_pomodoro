@@ -7,6 +7,7 @@ import SlideTabLayout from './components/SlideTabLayout/SlideTabLayout';
 import TodoPage from './pages/TodoPage';
 import AnalyticPage from './pages/AnalyticsPage';
 import SettingPage from './pages/SettingPage';
+import { useGlobalState, TaskStatus } from './global-state';
 
 const Container = styled.div`
   position: relative;
@@ -33,6 +34,19 @@ const PageArea = styled.div`
 `;
 
 const App: React.FC = () => {
+  const {
+    state: { time, taskStatus }
+  } = useGlobalState();
+
+  if (time === 0) {
+    if (taskStatus === TaskStatus.Work) {
+      console.log('Play Work Complete Sound!');
+    }
+    if (taskStatus === TaskStatus.Rest) {
+      console.log('Play Rest Complete Sound!');
+    }
+  }
+
   const pages = [
     {
       tabText: 'TO DO LIST',
