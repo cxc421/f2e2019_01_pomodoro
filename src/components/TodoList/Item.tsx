@@ -1,5 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import styled, { css as _css } from 'styled-components';
+// import {  } from 'react-sortable-hoc';
+import { SortableElement } from 'react-sortable-hoc';
 import { MdPlayCircleOutline, MdCheck, MdEdit, MdClear } from 'react-icons/md';
 import Points from './Points';
 
@@ -158,6 +160,7 @@ const Item: React.FC<ItemProps> = ({
   onClickDeleteBtn,
   onUpdateText
 }) => {
+  const [draging, setDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const canDrag = mode === 'EDIT';
 
@@ -165,20 +168,23 @@ const Item: React.FC<ItemProps> = ({
     function handleClickOutside(event: MouseEvent) {
       const container = containerRef.current;
       if (container) {
-        const node = event.target as Node;
-        if (!container.contains(node)) {
+        const node = event.target as HTMLDivElement;
+        if (!draging && !container.contains(node)) {
+          console.log('remove');
           onClickOutside();
         }
       }
+
+      setDragging(false);
     }
     if (mode === 'EDIT') {
-      document.addEventListener('click', handleClickOutside);
+      document.addEventListener('mouseup', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('mouseup', handleClickOutside);
     };
-  }, [mode, onClickOutside]);
+  }, [mode, onClickOutside, draging]);
 
   function handleClickEditBtn(e: React.MouseEvent) {
     e.nativeEvent.stopImmediatePropagation();
@@ -201,11 +207,30 @@ const Item: React.FC<ItemProps> = ({
   function handleInputMouseDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       beforeUpdateText(e.target as HTMLInputElement);
+      onClickOutside();
+      return;
+    }
+
+    if (e.key === 'Escape') {
+      onClickOutside();
+    }
+  }
+
+  function handleContainerMouseDown() {
+    if (canDrag) {
+      // Enable if cancel edit mode
+      // setDragging(true);
     }
   }
 
   return (
-    <ItemContainer done={done} canDrag={canDrag} ref={containerRef}>
+    <ItemContainer
+      onMouseDown={handleContainerMouseDown}
+      done={done}
+      canDrag={canDrag}
+      ref={containerRef}
+      className="item"
+    >
       <ItemGroup>
         {mode === 'NORMAL' ? (
           <>
@@ -251,4 +276,4 @@ const Item: React.FC<ItemProps> = ({
   );
 };
 
-export default Item;
+export default SortableElement(Item);

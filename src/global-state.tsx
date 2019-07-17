@@ -110,7 +110,8 @@ enum ActionType {
   DeleteTask,
   AddNewTodoTask,
   AddNewTomato,
-  ToggleTaskDoneDate
+  ToggleTaskDoneDate,
+  SwapTodoTask
 }
 type AddNewTomatoAction = { type: ActionType.AddNewTomato; taskId: string };
 type AddNewTodoTaskAction = {
@@ -138,6 +139,11 @@ type ToggleTaskDoneDateAction = {
   taskId: string;
 };
 type DeleteTaskAction = { type: ActionType.DeleteTask; taskId: string };
+type SwapTodoTaskAction = {
+  type: ActionType.SwapTodoTask;
+  oldIndex: number;
+  newIndex: number;
+};
 
 type Action =
   | SetTimeAction
@@ -148,7 +154,8 @@ type Action =
   | AddNewTodoTaskAction
   | AddNewTomatoAction
   | ToggleTaskDoneDateAction
-  | DeleteTaskAction;
+  | DeleteTaskAction
+  | SwapTodoTaskAction;
 
 function reducer(state: GlobalState, action: Action): GlobalState {
   switch (action.type) {
@@ -259,6 +266,15 @@ function reducer(state: GlobalState, action: Action): GlobalState {
       return {
         ...state,
         todoTasks: state.todoTasks.filter(task => task.id !== action.taskId)
+      };
+    }
+    case ActionType.SwapTodoTask: {
+      const newTodoTasks = Array.from(state.todoTasks);
+      const [removed] = newTodoTasks.splice(action.oldIndex, 1);
+      newTodoTasks.splice(action.newIndex, 0, removed);
+      return {
+        ...state,
+        todoTasks: newTodoTasks
       };
     }
     default:
@@ -380,6 +396,10 @@ export function useGlobalState() {
     dispatch({ type: ActionType.DeleteTask, taskId });
   };
 
+  const swapTodoTasks = (oldIndex: number, newIndex: number) => {
+    dispatch({ type: ActionType.SwapTodoTask, oldIndex, newIndex });
+  };
+
   React.useEffect(() => {
     if (timerStatus === TimerStatus.Play && prevTimeStamp !== null) {
       if (time > 0) {
@@ -425,6 +445,7 @@ export function useGlobalState() {
     addNewTask,
     setTaskText,
     deleteTask,
-    toggleTaskDone
+    toggleTaskDone,
+    swapTodoTasks
   };
 }

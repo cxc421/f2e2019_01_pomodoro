@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { SortableContainer } from 'react-sortable-hoc';
 import Item from './Item';
 import { Task, useGlobalState } from '../../global-state';
 import { usePrevious } from '../helpers/hooks';
@@ -30,11 +31,12 @@ const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
 
   return (
     <Container>
-      {tasks.map(task => (
+      {tasks.map((task, index) => (
         <Item
           mode={editItemId === task.id ? 'EDIT' : 'NORMAL'}
           text={task.text}
           key={task.id}
+          index={index}
           done={task.doneDate !== null}
           tomatoes={task.tomatoes}
           onClickPlayBtn={() => startTimer(task.id)}
@@ -43,10 +45,11 @@ const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
           onClickOutside={() => setEditItemId('')}
           onClickDeleteBtn={() => deleteTask(task.id)}
           onUpdateText={text => setTaskText(task.id, text)}
+          disabled={editItemId !== task.id}
         />
       ))}
     </Container>
   );
 };
 
-export default TodoList;
+export default SortableContainer(TodoList);
