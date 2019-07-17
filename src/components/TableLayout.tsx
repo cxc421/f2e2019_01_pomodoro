@@ -59,7 +59,7 @@ const ToggleShowIconWrppaer = styled.div<ToggleShowIconWrapperProps>`
 const TableContent = styled.div`
   position: relative;
   transition: height 300ms;
-  background: gray;
+  /* background: gray; */
   flex-shrink: 1;
   /* overflow: auto; */
   overflow: hidden;

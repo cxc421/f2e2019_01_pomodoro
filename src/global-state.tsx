@@ -105,10 +105,16 @@ enum ActionType {
   SetTimerStatus,
   SetTime,
   SetTaskStatus,
+  SetSelectTask,
   AddNewTodoTask,
-  AddNewTomato
+  AddNewTomato,
+  ToggleTaskDoneDate
 }
 type AddNewTomatoAction = { type: ActionType.AddNewTomato; taskId: string };
+type AddNewTodoTaskAction = {
+  type: ActionType.AddNewTodoTask;
+  text: string;
+};
 type SetTimeAction = { type: ActionType.SetTime; time: number };
 type SetTimerStatusAction = {
   type: ActionType.SetTimerStatus;
@@ -118,17 +124,20 @@ type SetTaskStatusAction = {
   type: ActionType.SetTaskStatus;
   taskStatus: TaskStatus;
 };
-type AddNewTodoTaskAction = {
-  type: ActionType.AddNewTodoTask;
-  text: string;
+type SetSelectTaskAction = { type: ActionType.SetSelectTask; taskId: string };
+type ToggleTaskDoneDateAction = {
+  type: ActionType.ToggleTaskDoneDate;
+  taskId: string;
 };
 
 type Action =
   | SetTimeAction
   | SetTimerStatusAction
   | SetTaskStatusAction
+  | SetSelectTaskAction
   | AddNewTodoTaskAction
-  | AddNewTomatoAction;
+  | AddNewTomatoAction
+  | ToggleTaskDoneDateAction;
 
 function reducer(state: GlobalState, action: Action): GlobalState {
   switch (action.type) {
@@ -154,6 +163,12 @@ function reducer(state: GlobalState, action: Action): GlobalState {
         taskStatus: action.taskStatus,
         timeMax,
         time: timeMax
+      };
+    }
+    case ActionType.SetSelectTask: {
+      return {
+        ...state,
+        selectTaskId: action.taskId
       };
     }
     case ActionType.AddNewTodoTask: {
@@ -183,6 +198,38 @@ function reducer(state: GlobalState, action: Action): GlobalState {
         })
       };
     }
+    case ActionType.ToggleTaskDoneDate: {
+      let task = state.todoTasks.find(task => task.id === action.taskId);
+      // swap todo to done
+      if (task) {
+        const newTodoTasks = state.todoTasks.filter(
+          task => task.id !== action.taskId
+        );
+        const newDoneTasks = [
+          ...state.doneTasks,
+          { ...task, doneDate: new Date() }
+        ];
+        return {
+          ...state,
+          todoTasks: newTodoTasks,
+          doneTasks: newDoneTasks
+        };
+      }
+      task = state.doneTasks.find(task => task.id === action.taskId);
+      // swap done to todo
+      if (task) {
+        const newDoneTasks = state.doneTasks.filter(
+          task => task.id !== action.taskId
+        );
+        const newTodoTasks = [...state.todoTasks, { ...task, doneDate: null }];
+        return {
+          ...state,
+          todoTasks: newTodoTasks,
+          doneTasks: newDoneTasks
+        };
+      }
+      return state;
+    }
     default:
       return state;
   }
@@ -194,11 +241,25 @@ export function useGlobalState() {
     throw new Error(`useGlobalState must be used within a GlobalStateProvider`);
   }
   const [state, dispatch] = context;
-  const { timerStatus, time, taskStatus, selectTaskId } = state;
+  const { timerStatus, time, taskStatus, selectTaskId, todoTasks } = state;
   const [prevTimeStamp, setPrevTimeStamp] = useState<null | number>(null);
 
   const startTimer = (taskId: string) => {
+    if (taskId === '') return;
+
     setPrevTimeStamp(Date.now());
+
+    if (taskId !== selectTaskId) {
+      dispatch({
+        type: ActionType.SetTaskStatus,
+        taskStatus: TaskStatus.Work
+      });
+      dispatch({
+        type: ActionType.SetSelectTask,
+        taskId
+      });
+    }
+
     dispatch({
       type: ActionType.SetTimerStatus,
       timerStatus: TimerStatus.Play
@@ -219,9 +280,10 @@ export function useGlobalState() {
       type: ActionType.SetTimerStatus,
       timerStatus: TimerStatus.Stop
     });
+    // 只要放棄, 都跳回 WORK 狀態
     dispatch({
       type: ActionType.SetTaskStatus,
-      taskStatus
+      taskStatus: TaskStatus.Work
     });
   };
 
@@ -231,6 +293,32 @@ export function useGlobalState() {
       dispatch({
         type: ActionType.AddNewTodoTask,
         text
+      });
+    }
+  };
+
+  const toggleTaskDone = (taskId: string) => {
+    dispatch({
+      type: ActionType.ToggleTaskDoneDate,
+      taskId
+    });
+    if (taskId === selectTaskId) {
+      const newSelectTask = todoTasks.find(task => task.id !== selectTaskId);
+      dispatch({
+        type: ActionType.SetSelectTask,
+        taskId: newSelectTask ? newSelectTask.id : ''
+      });
+      if (timerStatus !== TimerStatus.Stop) {
+        cancelTimer();
+        dispatch({
+          type: ActionType.SetTaskStatus,
+          taskStatus: TaskStatus.Work
+        });
+      }
+    } else if (selectTaskId === '') {
+      dispatch({
+        type: ActionType.SetSelectTask,
+        taskId
       });
     }
   };
@@ -277,6 +365,7 @@ export function useGlobalState() {
     startTimer,
     pauseTimer,
     cancelTimer,
-    addNewTask
+    addNewTask,
+    toggleTaskDone
   };
 }

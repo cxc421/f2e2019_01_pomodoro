@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Item from './Item';
-import { Task } from '../../global-state';
+import { Task, useGlobalState } from '../../global-state';
 import { usePrevious } from '../helpers/hooks';
 
 interface TodoListProps {
@@ -13,7 +13,9 @@ const Container = styled.div`
 `;
 
 const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
+  const [editItemId, setEditItemId] = useState('');
   const prevTasks = usePrevious<Task[]>(tasks);
+  const { startTimer, toggleTaskDone } = useGlobalState();
 
   if (prevTasks && tasks.length !== prevTasks.length) {
     setTimeout(() => {
@@ -25,10 +27,15 @@ const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
     <Container>
       {tasks.map(task => (
         <Item
+          mode={editItemId === task.id ? 'EDIT' : 'NORMAL'}
           text={task.text}
           key={task.id}
           done={task.doneDate !== null}
           tomatoes={task.tomatoes}
+          onClickPlayBtn={() => startTimer(task.id)}
+          onClickDoneBtn={() => toggleTaskDone(task.id)}
+          onClickEditBtn={() => setEditItemId(task.id)}
+          onClickOutside={() => setEditItemId('')}
         />
       ))}
     </Container>

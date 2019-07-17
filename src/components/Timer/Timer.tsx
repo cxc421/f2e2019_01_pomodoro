@@ -55,7 +55,7 @@ const Timer: React.FC = () => {
   const popupText =
     taskStatus === TaskStatus.Work
       ? '您目前正在進行一個番茄時鐘，確定要放棄嗎？'
-      : '您要放棄休息嗎？';
+      : '您要跳過休息嗎？';
 
   function onClickSpinner() {
     switch (timerStatus) {
