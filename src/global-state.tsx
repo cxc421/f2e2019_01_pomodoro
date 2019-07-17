@@ -116,6 +116,7 @@ type AddNewTomatoAction = { type: ActionType.AddNewTomato; taskId: string };
 type AddNewTodoTaskAction = {
   type: ActionType.AddNewTodoTask;
   text: string;
+  id: string;
 };
 type SetTimeAction = { type: ActionType.SetTime; time: number };
 type SetTimerStatusAction = {
@@ -197,7 +198,7 @@ function reducer(state: GlobalState, action: Action): GlobalState {
     }
     case ActionType.AddNewTodoTask: {
       const newTask: Task = {
-        id: uuid(),
+        id: action.id,
         text: action.text,
         doneDate: null,
         tomatoes: []
@@ -320,10 +321,13 @@ export function useGlobalState() {
   const addNewTask = (text: string) => {
     text = text.trim();
     if (text.length > 0) {
+      const newId = uuid();
       dispatch({
         type: ActionType.AddNewTodoTask,
-        text
+        text,
+        id: newId
       });
+      handleTodoTaskIncrease(newId);
     }
   };
 
@@ -343,6 +347,15 @@ export function useGlobalState() {
     }
   }
 
+  function handleTodoTaskIncrease(taskId: string) {
+    if (selectTaskId === '') {
+      dispatch({
+        type: ActionType.SetSelectTask,
+        taskId
+      });
+    }
+  }
+
   const toggleTaskDone = (taskId: string) => {
     dispatch({
       type: ActionType.ToggleTaskDoneDate,
@@ -350,13 +363,7 @@ export function useGlobalState() {
     });
 
     handleRemoveCurSelectTask(taskId);
-
-    if (selectTaskId === '') {
-      dispatch({
-        type: ActionType.SetSelectTask,
-        taskId
-      });
-    }
+    handleTodoTaskIncrease(taskId);
   };
 
   const setTaskText = (taskId: string, text: string) => {
