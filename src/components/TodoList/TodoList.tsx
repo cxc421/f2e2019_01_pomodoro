@@ -15,7 +15,7 @@ const Container = styled.div`
 const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
   const [editItemId, setEditItemId] = useState('');
   const prevTasks = usePrevious<Task[]>(tasks);
-  const { startTimer, toggleTaskDone } = useGlobalState();
+  const { startTimer, toggleTaskDone, setTaskText } = useGlobalState();
 
   if (prevTasks && tasks.length !== prevTasks.length) {
     setTimeout(() => {
@@ -36,6 +36,7 @@ const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
           onClickDoneBtn={() => toggleTaskDone(task.id)}
           onClickEditBtn={() => setEditItemId(task.id)}
           onClickOutside={() => setEditItemId('')}
+          onUpdateText={text => setTaskText(task.id, text)}
         />
       ))}
     </Container>

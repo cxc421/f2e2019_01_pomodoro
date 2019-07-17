@@ -14,6 +14,7 @@ interface ItemProps {
   onClickDoneBtn: () => void;
   onClickEditBtn: () => void;
   onClickOutside: () => void;
+  onUpdateText: (str: string) => void;
 }
 
 interface DoneProps {
@@ -152,7 +153,8 @@ const Item: React.FC<ItemProps> = ({
   onClickPlayBtn,
   onClickDoneBtn,
   onClickEditBtn,
-  onClickOutside
+  onClickOutside,
+  onUpdateText
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canDrag = mode === 'EDIT';
@@ -181,6 +183,25 @@ const Item: React.FC<ItemProps> = ({
     onClickEditBtn();
   }
 
+  function beforeUpdateText(input: HTMLInputElement) {
+    const newText = input.value.trim();
+    if (newText.length === 0) {
+      input.value = text;
+    } else {
+      onUpdateText(newText);
+    }
+  }
+
+  function handleInputBlur(e: React.FocusEvent<HTMLInputElement>) {
+    beforeUpdateText(e.target);
+  }
+
+  function handleInputMouseDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      beforeUpdateText(e.target as HTMLInputElement);
+    }
+  }
+
   return (
     <ItemContainer done={done} canDrag={canDrag} ref={containerRef}>
       <ItemGroup>
@@ -196,7 +217,12 @@ const Item: React.FC<ItemProps> = ({
             <DeleteIcon>
               <MdClear />
             </DeleteIcon>
-            <ItemInput defaultValue={text} autoFocus={true} />
+            <ItemInput
+              defaultValue={text}
+              autoFocus={true}
+              onBlur={handleInputBlur}
+              onKeyDown={handleInputMouseDown}
+            />
           </>
         )}
       </ItemGroup>

@@ -105,6 +105,7 @@ enum ActionType {
   SetTimerStatus,
   SetTime,
   SetTaskStatus,
+  SetTaskText,
   SetSelectTask,
   AddNewTodoTask,
   AddNewTomato,
@@ -124,6 +125,11 @@ type SetTaskStatusAction = {
   type: ActionType.SetTaskStatus;
   taskStatus: TaskStatus;
 };
+type SetTaskTextAction = {
+  type: ActionType.SetTaskText;
+  text: string;
+  taskId: string;
+};
 type SetSelectTaskAction = { type: ActionType.SetSelectTask; taskId: string };
 type ToggleTaskDoneDateAction = {
   type: ActionType.ToggleTaskDoneDate;
@@ -134,6 +140,7 @@ type Action =
   | SetTimeAction
   | SetTimerStatusAction
   | SetTaskStatusAction
+  | SetTaskTextAction
   | SetSelectTaskAction
   | AddNewTodoTaskAction
   | AddNewTomatoAction
@@ -163,6 +170,20 @@ function reducer(state: GlobalState, action: Action): GlobalState {
         taskStatus: action.taskStatus,
         timeMax,
         time: timeMax
+      };
+    }
+    case ActionType.SetTaskText: {
+      return {
+        ...state,
+        todoTasks: state.todoTasks.map(task => {
+          if (task.id === action.taskId) {
+            return {
+              ...task,
+              text: action.text
+            };
+          }
+          return task;
+        })
       };
     }
     case ActionType.SetSelectTask: {
@@ -323,6 +344,14 @@ export function useGlobalState() {
     }
   };
 
+  const setTaskText = (taskId: string, text: string) => {
+    dispatch({
+      type: ActionType.SetTaskText,
+      text,
+      taskId
+    });
+  };
+
   React.useEffect(() => {
     if (timerStatus === TimerStatus.Play && prevTimeStamp !== null) {
       if (time > 0) {
@@ -366,6 +395,7 @@ export function useGlobalState() {
     pauseTimer,
     cancelTimer,
     addNewTask,
+    setTaskText,
     toggleTaskDone
   };
 }
