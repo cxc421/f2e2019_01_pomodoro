@@ -105,9 +105,10 @@ enum ActionType {
   SetTimerStatus,
   SetTime,
   SetTaskStatus,
-  AddNewTodoTask
+  AddNewTodoTask,
+  AddNewTomato
 }
-
+type AddNewTomatoAction = { type: ActionType.AddNewTomato; taskId: string };
 type SetTimeAction = { type: ActionType.SetTime; time: number };
 type SetTimerStatusAction = {
   type: ActionType.SetTimerStatus;
@@ -126,7 +127,8 @@ type Action =
   | SetTimeAction
   | SetTimerStatusAction
   | SetTaskStatusAction
-  | AddNewTodoTaskAction;
+  | AddNewTodoTaskAction
+  | AddNewTomatoAction;
 
 function reducer(state: GlobalState, action: Action): GlobalState {
   switch (action.type) {
@@ -166,6 +168,21 @@ function reducer(state: GlobalState, action: Action): GlobalState {
         todoTasks: [...state.todoTasks, newTask]
       };
     }
+    case ActionType.AddNewTomato: {
+      return {
+        ...state,
+        todoTasks: state.todoTasks.map(task => {
+          if (task.id === action.taskId) {
+            return {
+              ...task,
+              tomatoes: [...task.tomatoes, new Date()]
+            };
+          } else {
+            return task;
+          }
+        })
+      };
+    }
     default:
       return state;
   }
@@ -177,10 +194,8 @@ export function useGlobalState() {
     throw new Error(`useGlobalState must be used within a GlobalStateProvider`);
   }
   const [state, dispatch] = context;
-  const { timerStatus, time, taskStatus } = state;
+  const { timerStatus, time, taskStatus, selectTaskId } = state;
   const [prevTimeStamp, setPrevTimeStamp] = useState<null | number>(null);
-
-  // console.log({ timeMax: state.timeMax, time });
 
   const startTimer = (taskId: string) => {
     setPrevTimeStamp(Date.now());
@@ -234,6 +249,10 @@ export function useGlobalState() {
       if (time === 0) {
         if (taskStatus === TaskStatus.Work) {
           dispatch({
+            type: ActionType.AddNewTomato,
+            taskId: selectTaskId
+          });
+          dispatch({
             type: ActionType.SetTaskStatus,
             taskStatus: TaskStatus.Rest
           });
@@ -251,7 +270,7 @@ export function useGlobalState() {
         }
       }
     }
-  }, [timerStatus, time, prevTimeStamp, dispatch, taskStatus]);
+  }, [timerStatus, time, prevTimeStamp, dispatch, taskStatus, selectTaskId]);
 
   return {
     state,

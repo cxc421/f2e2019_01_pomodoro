@@ -10,7 +10,7 @@ const Container = styled.form`
   position: relative;
   /* width: calc(100% - 3px); */
   width: 100%;
-  /* height: ${inputHeight}px; */
+  height: ${inputHeight}px;
   background: white;
   display: flex;
   color: ${props => props.theme.color};
@@ -50,7 +50,8 @@ const Input = styled.input`
 
 const ApplyBtn = styled.div`
   width: ${inputHeight}px;
-  height: ${inputHeight}px;
+  /* height: ${inputHeight}px; */
+  height: 100%;
   background: white;
   display: flex;
   justify-content: center;

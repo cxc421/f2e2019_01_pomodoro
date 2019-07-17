@@ -6,7 +6,7 @@ interface TableProps {
   headText: string;
   collapsible?: boolean;
   style?: React.CSSProperties;
-  maxHeight: number | string;
+  // maxHeight: number | string;
 }
 
 interface TableHeadProps {
@@ -61,7 +61,8 @@ const TableContent = styled.div`
   transition: height 300ms;
   background: gray;
   flex-shrink: 1;
-  overflow: auto;
+  /* overflow: auto; */
+  overflow: hidden;
 `;
 
 function useContentHeight(contentRef: React.RefObject<HTMLDivElement>) {
@@ -92,11 +93,11 @@ const TableLayout: React.FC<TableProps> = ({
   headText,
   collapsible = true,
   style,
-  children,
-  maxHeight
+  children
+  // maxHeight
 }) => {
   const containerStyle: React.CSSProperties = Object.assign({}, style, {
-    maxHeight
+    // maxHeight
   });
   const [showContent, setShowContent] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
