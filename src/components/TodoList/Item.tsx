@@ -15,6 +15,7 @@ interface ItemProps {
   onClickEditBtn: () => void;
   onClickOutside: () => void;
   onUpdateText: (str: string) => void;
+  onClickDeleteBtn: () => void;
 }
 
 interface DoneProps {
@@ -154,6 +155,7 @@ const Item: React.FC<ItemProps> = ({
   onClickDoneBtn,
   onClickEditBtn,
   onClickOutside,
+  onClickDeleteBtn,
   onUpdateText
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -214,7 +216,7 @@ const Item: React.FC<ItemProps> = ({
           </>
         ) : (
           <>
-            <DeleteIcon>
+            <DeleteIcon onClick={onClickDeleteBtn}>
               <MdClear />
             </DeleteIcon>
             <ItemInput

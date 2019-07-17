@@ -107,6 +107,7 @@ enum ActionType {
   SetTaskStatus,
   SetTaskText,
   SetSelectTask,
+  DeleteTask,
   AddNewTodoTask,
   AddNewTomato,
   ToggleTaskDoneDate
@@ -135,6 +136,7 @@ type ToggleTaskDoneDateAction = {
   type: ActionType.ToggleTaskDoneDate;
   taskId: string;
 };
+type DeleteTaskAction = { type: ActionType.DeleteTask; taskId: string };
 
 type Action =
   | SetTimeAction
@@ -144,7 +146,8 @@ type Action =
   | SetSelectTaskAction
   | AddNewTodoTaskAction
   | AddNewTomatoAction
-  | ToggleTaskDoneDateAction;
+  | ToggleTaskDoneDateAction
+  | DeleteTaskAction;
 
 function reducer(state: GlobalState, action: Action): GlobalState {
   switch (action.type) {
@@ -251,6 +254,12 @@ function reducer(state: GlobalState, action: Action): GlobalState {
       }
       return state;
     }
+    case ActionType.DeleteTask: {
+      return {
+        ...state,
+        todoTasks: state.todoTasks.filter(task => task.id !== action.taskId)
+      };
+    }
     default:
       return state;
   }
@@ -318,25 +327,31 @@ export function useGlobalState() {
     }
   };
 
+  function handleRemoveCurSelectTask(taskId: string) {
+    if (taskId !== selectTaskId) return;
+    const newSelectTask = todoTasks.find(task => task.id !== selectTaskId);
+    dispatch({
+      type: ActionType.SetSelectTask,
+      taskId: newSelectTask ? newSelectTask.id : ''
+    });
+    if (timerStatus !== TimerStatus.Stop) {
+      cancelTimer();
+      dispatch({
+        type: ActionType.SetTaskStatus,
+        taskStatus: TaskStatus.Work
+      });
+    }
+  }
+
   const toggleTaskDone = (taskId: string) => {
     dispatch({
       type: ActionType.ToggleTaskDoneDate,
       taskId
     });
-    if (taskId === selectTaskId) {
-      const newSelectTask = todoTasks.find(task => task.id !== selectTaskId);
-      dispatch({
-        type: ActionType.SetSelectTask,
-        taskId: newSelectTask ? newSelectTask.id : ''
-      });
-      if (timerStatus !== TimerStatus.Stop) {
-        cancelTimer();
-        dispatch({
-          type: ActionType.SetTaskStatus,
-          taskStatus: TaskStatus.Work
-        });
-      }
-    } else if (selectTaskId === '') {
+
+    handleRemoveCurSelectTask(taskId);
+
+    if (selectTaskId === '') {
       dispatch({
         type: ActionType.SetSelectTask,
         taskId
@@ -350,6 +365,12 @@ export function useGlobalState() {
       text,
       taskId
     });
+  };
+
+  const deleteTask = (taskId: string) => {
+    handleRemoveCurSelectTask(taskId);
+
+    dispatch({ type: ActionType.DeleteTask, taskId });
   };
 
   React.useEffect(() => {
@@ -396,6 +417,7 @@ export function useGlobalState() {
     cancelTimer,
     addNewTask,
     setTaskText,
+    deleteTask,
     toggleTaskDone
   };
 }
