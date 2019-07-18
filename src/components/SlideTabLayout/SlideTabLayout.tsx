@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, MemoExoticComponent } from 'react';
 import styled, { keyframes, css as _css } from 'styled-components';
 import { IconType } from 'react-icons';
 import Tab from './Tab';
@@ -76,7 +76,7 @@ const TabBottom = styled.div`
 interface Page {
   tabText: string;
   TabIcon: IconType;
-  Page: () => JSX.Element;
+  Page: (() => JSX.Element) | MemoExoticComponent<() => JSX.Element>;
 }
 
 interface SlideTabLayoutProps {

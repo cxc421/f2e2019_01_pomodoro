@@ -170,7 +170,7 @@ const Item: React.FC<ItemProps> = ({
       if (container) {
         const node = event.target as HTMLDivElement;
         if (!draging && !container.contains(node)) {
-          console.log('remove');
+          // console.log('remove');
           onClickOutside();
         }
       }

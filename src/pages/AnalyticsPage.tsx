@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { GroupBtnWrapper, GroupBtn } from '../components/GroupBtn';
 import PanelTableLayout from '../components/PanelTableLayout';
 import Highlight from '../components/Highlight';
+import SelectWeek from '../components/SelectWeek';
 
 enum AnalyticTab {
   TOMATO,
@@ -38,7 +39,24 @@ const FocusTimeArea = styled.div`
 
 const AnalyticsPage = () => {
   const [tab, setTab] = useState(AnalyticTab.TOMATO);
+  const [weekDate, setWeekDate] = useState(new Date());
   const isTomatoTab = tab === AnalyticTab.TOMATO;
+
+  function toNextWeek() {
+    const dt = new Date(weekDate.getTime());
+    dt.setDate(weekDate.getDate() + 7);
+    setWeekDate(dt);
+  }
+
+  function toPrevWeek() {
+    const dt = new Date(weekDate.getTime());
+    dt.setDate(weekDate.getDate() - 7);
+    setWeekDate(dt);
+  }
+
+  const chartTableHeadElm = (
+    <SelectWeek dt={weekDate} toNextWeek={toNextWeek} toPrevWeek={toPrevWeek} />
+  );
 
   return (
     <Container>
@@ -68,9 +86,11 @@ const AnalyticsPage = () => {
           </div>
         </FocusTimeArea>
       </PanelTableLayout>
-      {isTomatoTab && <PanelTableLayout headText="CHART" />}
+      {isTomatoTab && (
+        <PanelTableLayout headText="CHART" titleRightElm={chartTableHeadElm} />
+      )}
     </Container>
   );
 };
 
-export default AnalyticsPage;
+export default React.memo(AnalyticsPage);

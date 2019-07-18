@@ -6,7 +6,7 @@ interface TableProps {
   headText: string;
   collapsible?: boolean;
   style?: React.CSSProperties;
-  // maxHeight: number | string;
+  titleRightElm?: JSX.Element;
 }
 
 interface TableHeadProps {
@@ -93,12 +93,10 @@ const TableLayout: React.FC<TableProps> = ({
   headText,
   collapsible = false,
   style,
-  children
-  // maxHeight
+  children,
+  titleRightElm
 }) => {
-  const containerStyle: React.CSSProperties = Object.assign({}, style, {
-    // maxHeight
-  });
+  const containerStyle: React.CSSProperties = Object.assign({}, style);
   const [showContent, setShowContent] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
   const contentHeight = useContentHeight(contentRef);
@@ -116,11 +114,14 @@ const TableLayout: React.FC<TableProps> = ({
     <TableContainer style={containerStyle}>
       <TableHead enableHover={collapsible} onClick={onClickTableHead}>
         <span>{headText}</span>
-        {collapsible && (
-          <ToggleShowIconWrppaer up={showContent}>
-            <MdArrowDropUp />
-          </ToggleShowIconWrppaer>
-        )}
+        <div>
+          {titleRightElm}
+          {collapsible && (
+            <ToggleShowIconWrppaer up={showContent}>
+              <MdArrowDropUp />
+            </ToggleShowIconWrppaer>
+          )}
+        </div>
       </TableHead>
       <TableContent ref={contentRef} style={contentStyle}>
         {children}
