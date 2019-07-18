@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Spinner from './Spinner';
 import Popup from '../Popup';
 import { useGlobalState, TimerStatus, TaskStatus } from '../../global-state';
-import { secToTimeText } from '../helpers/time';
+import { secToTimeText } from '../../helpers/time';
 
 const Container = styled.div`
   position: relative;

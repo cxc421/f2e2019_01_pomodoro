@@ -4,7 +4,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { SortEndHandler, SortStartHandler } from 'react-sortable-hoc';
 import { useGlobalState } from '../global-state';
 import AddMissionInput from '../components/AddMissionInput';
-import TableLayout from '../components/TableLayout';
+import PanelTableLayout from '../components/PanelTableLayout';
 import TodoList from '../components/TodoList/TodoList';
 
 const Container = styled.div`
@@ -56,17 +56,25 @@ const TodoPage = () => {
     <Container>
       <PerfectScrollbar>
         <AddMissionInput />
-        <TableLayout headText="TO-DO" collapsible={true} style={todoTableStyle}>
+        <PanelTableLayout
+          headText="TO-DO"
+          collapsible={true}
+          style={todoTableStyle}
+        >
           <TodoList
             tasks={todoTasks}
             onSortEnd={onSortEnd}
             distance={3}
             updateBeforeSortStart={updateBeforeSortStart}
           />
-        </TableLayout>
-        <TableLayout headText="DONE" collapsible={true} style={doneTableStyle}>
+        </PanelTableLayout>
+        <PanelTableLayout
+          headText="DONE"
+          collapsible={true}
+          style={doneTableStyle}
+        >
           <TodoList tasks={doneTasks} />
-        </TableLayout>
+        </PanelTableLayout>
       </PerfectScrollbar>
     </Container>
   );

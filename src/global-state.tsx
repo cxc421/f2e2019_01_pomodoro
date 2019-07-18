@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import uuid from 'uuid/v1';
+import { makeDate } from './helpers/date';
 
 export interface Task {
   id: string;
@@ -20,10 +21,10 @@ export enum TaskStatus {
 }
 
 enum TOTAL_TIME {
-  // WORK = 25 * 60 * 1000,
-  // REST = 5 * 60 * 1000
-  WORK = 10 * 1000,
-  REST = 5 * 1000
+  WORK = 25 * 60 * 1000,
+  REST = 5 * 60 * 1000
+  // WORK = 10 * 1000,
+  // REST = 5 * 1000
 }
 
 interface GlobalState {
@@ -43,7 +44,7 @@ const initTodoTasks: Task[] = [
     id: uuid(),
     text: '第一件未完成的事',
     doneDate: null,
-    tomatoes: [new Date()]
+    tomatoes: [makeDate(2019, 7, 18)]
   },
   {
     id: uuid(),
@@ -57,26 +58,29 @@ const initTodoTasks: Task[] = [
     doneDate: null,
     tomatoes: []
   }
-  // {
-  //   id: uuid(),
-  //   text: '第四件未完成的事',
-  //   doneDate: null,
-  //   tomatoes: []
-  // }
 ];
 
 const initDoneTasks = [
   {
     id: uuid(),
     text: '第一件完成的事',
-    doneDate: new Date(),
-    tomatoes: [new Date(), new Date(), new Date()]
+    doneDate: makeDate(2019, 7, 16),
+    tomatoes: [
+      makeDate(2019, 7, 15),
+      makeDate(2019, 7, 15),
+      makeDate(2019, 7, 16)
+    ]
   },
   {
     id: uuid(),
     text: '第二件完成的事',
-    doneDate: new Date(),
-    tomatoes: [new Date(), new Date(), new Date(), new Date()]
+    doneDate: makeDate(2019, 7, 17),
+    tomatoes: [
+      makeDate(2019, 7, 15),
+      makeDate(2019, 7, 16),
+      makeDate(2019, 7, 17),
+      makeDate(2019, 7, 17)
+    ]
   }
 ];
 

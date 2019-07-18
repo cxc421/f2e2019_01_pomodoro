@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { SortableContainer } from 'react-sortable-hoc';
 import Item from './Item';
 import { Task, useGlobalState } from '../../global-state';
-import { usePrevious } from '../helpers/hooks';
+import { usePrevious } from '../../helpers/hooks';
 
 interface TodoListProps {
   tasks: Task[];

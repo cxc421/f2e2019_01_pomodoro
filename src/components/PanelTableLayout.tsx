@@ -91,7 +91,7 @@ function useContentHeight(contentRef: React.RefObject<HTMLDivElement>) {
 
 const TableLayout: React.FC<TableProps> = ({
   headText,
-  collapsible = true,
+  collapsible = false,
   style,
   children
   // maxHeight

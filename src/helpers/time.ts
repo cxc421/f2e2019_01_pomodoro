@@ -1,4 +1,4 @@
-function strPad2(number: number): string {
+export function strPad2(number: number): string {
   if (number > 99) {
     throw new Error('Try to pad2 for number > 99. number=' + number);
   }
