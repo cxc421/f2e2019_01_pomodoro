@@ -4,6 +4,7 @@ import { GroupBtnWrapper, GroupBtn } from '../components/GroupBtn';
 import PanelTableLayout from '../components/PanelTableLayout';
 import Highlight from '../components/Highlight';
 import SelectWeek from '../components/SelectWeek';
+import LineChart from '../components/LineChart';
 
 enum AnalyticTab {
   TOMATO,
@@ -87,7 +88,9 @@ const AnalyticsPage = () => {
         </FocusTimeArea>
       </PanelTableLayout>
       {isTomatoTab && (
-        <PanelTableLayout headText="CHART" titleRightElm={chartTableHeadElm} />
+        <PanelTableLayout headText="CHART" titleRightElm={chartTableHeadElm}>
+          <LineChart />
+        </PanelTableLayout>
       )}
     </Container>
   );
