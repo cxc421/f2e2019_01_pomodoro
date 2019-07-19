@@ -45,7 +45,7 @@ const Icon = styled.div<IconProps>`
   }
 
   &:hover {
-    color: ${props => (props.disable ? 'white' : '#f44336')};
+    color: ${props => (props.disable ? 'white' : '#00abff')};
   }
 `;
 

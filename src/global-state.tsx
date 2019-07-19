@@ -42,19 +42,43 @@ type ContextType = [GlobalState, React.Dispatch<Action>] | null;
 const initTodoTasks: Task[] = [
   {
     id: uuid(),
-    text: '第一件未完成的事',
-    doneDate: null,
-    tomatoes: [makeDate(2019, 7, 18)]
-  },
-  {
-    id: uuid(),
-    text: '第二件未完成的事',
+    text: '蕃茄鐘設定頁面: 鈴聲',
     doneDate: null,
     tomatoes: []
   },
   {
     id: uuid(),
-    text: '第三件未完成的事',
+    text: '蕃茄鐘設定頁面: 時間',
+    doneDate: null,
+    tomatoes: []
+  },
+  {
+    id: uuid(),
+    text: '蕃茄鐘設定頁面: 循環',
+    doneDate: null,
+    tomatoes: []
+  },
+  {
+    id: uuid(),
+    text: '保存全域設定',
+    doneDate: null,
+    tomatoes: []
+  },
+  {
+    id: uuid(),
+    text: '響應式 Layout',
+    doneDate: null,
+    tomatoes: []
+  },
+  {
+    id: uuid(),
+    text: '蕃茄鐘分析頁面: LineChart 動畫',
+    doneDate: null,
+    tomatoes: []
+  },
+  {
+    id: uuid(),
+    text: '蕃茄鐘分析頁面: 數字動畫',
     doneDate: null,
     tomatoes: []
   }
@@ -63,23 +87,48 @@ const initTodoTasks: Task[] = [
 const initDoneTasks = [
   {
     id: uuid(),
-    text: '第一件完成的事',
-    doneDate: makeDate(2019, 7, 16),
+    text: '蕃茄鐘基本 Layout',
+    doneDate: makeDate(2019, 7, 11),
     tomatoes: [
-      makeDate(2019, 7, 15),
-      makeDate(2019, 7, 15),
-      makeDate(2019, 7, 16)
+      makeDate(2019, 7, 9),
+      makeDate(2019, 7, 10),
+      makeDate(2019, 7, 11)
     ]
   },
   {
     id: uuid(),
-    text: '第二件完成的事',
-    doneDate: makeDate(2019, 7, 17),
+    text: '倒數計時動畫',
+    doneDate: makeDate(2019, 7, 12),
     tomatoes: [
-      makeDate(2019, 7, 15),
+      makeDate(2019, 7, 11),
+      makeDate(2019, 7, 11),
+      makeDate(2019, 7, 12),
+      makeDate(2019, 7, 12)
+    ]
+  },
+  {
+    id: uuid(),
+    text: '切換 tab 動畫',
+    doneDate: makeDate(2019, 7, 16),
+    tomatoes: [
+      makeDate(2019, 7, 13),
+      makeDate(2019, 7, 13),
+      makeDate(2019, 7, 14),
+      makeDate(2019, 7, 15)
+    ]
+  },
+  {
+    id: uuid(),
+    text: '圖表 (lineChart)',
+    doneDate: makeDate(2019, 7, 19),
+    tomatoes: [
       makeDate(2019, 7, 16),
       makeDate(2019, 7, 17),
-      makeDate(2019, 7, 17)
+      makeDate(2019, 7, 17),
+      makeDate(2019, 7, 18),
+      makeDate(2019, 7, 18),
+      makeDate(2019, 7, 18),
+      makeDate(2019, 7, 19)
     ]
   }
 ];
