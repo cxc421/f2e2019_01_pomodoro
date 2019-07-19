@@ -35,6 +35,11 @@ body {
   font-weight: normal;
 }
 
+select {
+  font-family: 'Taipei Sans TC Beta', sans-serif;
+  font-weight: normal;
+}
+
 /*
 *  Custom Perfect Scrollbar CSS
 */

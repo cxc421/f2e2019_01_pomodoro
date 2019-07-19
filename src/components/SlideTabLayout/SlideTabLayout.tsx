@@ -86,7 +86,7 @@ interface SlideTabLayoutProps {
 const SlideTabLayout: React.FC<SlideTabLayoutProps> = ({ pages }) => {
   const tabSize = 157;
   const tabMargin = 22;
-  const [tabIndex, setTabIndex] = useState(1);
+  const [tabIndex, setTabIndex] = useState(2);
   const [animating, setAnimating] = useState(false);
 
   const tabBottomStyle: React.CSSProperties = {

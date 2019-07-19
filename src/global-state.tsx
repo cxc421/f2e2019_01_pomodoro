@@ -35,17 +35,16 @@ interface GlobalState {
   time: number;
   todoTasks: Task[];
   doneTasks: Task[];
+
+  soundBasePath: string;
+  soundNameList: string[];
+  soundWorkIndex: number;
+  soundRestIndex: number;
 }
 
 type ContextType = [GlobalState, React.Dispatch<Action>] | null;
 
 const initTodoTasks: Task[] = [
-  {
-    id: uuid(),
-    text: '蕃茄鐘設定頁面: 鈴聲',
-    doneDate: null,
-    tomatoes: []
-  },
   {
     id: uuid(),
     text: '蕃茄鐘設定頁面: 時間',
@@ -130,6 +129,20 @@ const initDoneTasks = [
       makeDate(2019, 7, 18),
       makeDate(2019, 7, 19)
     ]
+  },
+  {
+    id: uuid(),
+    text: '蕃茄鐘設定頁面: 鈴聲',
+    doneDate: makeDate(2019, 7, 19),
+    tomatoes: [
+      makeDate(2019, 7, 19),
+      makeDate(2019, 7, 19),
+      makeDate(2019, 7, 19),
+      makeDate(2019, 7, 19),
+      makeDate(2019, 7, 20),
+      makeDate(2019, 7, 20),
+      makeDate(2019, 7, 20)
+    ]
   }
 ];
 
@@ -143,7 +156,11 @@ const initialState: GlobalState = {
   // timeMax: TOTAL_TIME.REST,
   // time: TOTAL_TIME.REST,
   todoTasks: initTodoTasks,
-  doneTasks: initDoneTasks
+  doneTasks: initDoneTasks,
+  soundBasePath: '/sounds',
+  soundNameList: ['Super Mario - Game Start', '高雄發大財'],
+  soundWorkIndex: 0,
+  soundRestIndex: 1
 };
 
 const Context = React.createContext<ContextType>(null);
@@ -164,7 +181,8 @@ enum ActionType {
   AddNewTodoTask,
   AddNewTomato,
   ToggleTaskDoneDate,
-  SwapTodoTask
+  SwapTodoTask,
+  SetSound
 }
 type AddNewTomatoAction = { type: ActionType.AddNewTomato; taskId: string };
 type AddNewTodoTaskAction = {
@@ -198,6 +216,13 @@ type SwapTodoTaskAction = {
   newIndex: number;
 };
 
+type SoundType = 'rest' | 'work';
+type SetSoundAction = {
+  type: ActionType.SetSound;
+  soundType: SoundType;
+  soundIndex: number;
+};
+
 type Action =
   | SetTimeAction
   | SetTimerStatusAction
@@ -208,7 +233,8 @@ type Action =
   | AddNewTomatoAction
   | ToggleTaskDoneDateAction
   | DeleteTaskAction
-  | SwapTodoTaskAction;
+  | SwapTodoTaskAction
+  | SetSoundAction;
 
 function reducer(state: GlobalState, action: Action): GlobalState {
   switch (action.type) {
@@ -329,6 +355,27 @@ function reducer(state: GlobalState, action: Action): GlobalState {
         ...state,
         todoTasks: newTodoTasks
       };
+    }
+    case ActionType.SetSound: {
+      if (
+        action.soundIndex < 0 ||
+        action.soundIndex >= state.soundNameList.length
+      ) {
+        return state;
+      }
+      if (action.soundType === 'rest') {
+        return {
+          ...state,
+          soundRestIndex: action.soundIndex
+        };
+      }
+      if (action.soundType === 'work') {
+        return {
+          ...state,
+          soundWorkIndex: action.soundIndex
+        };
+      }
+      throw new Error('unknown setSound type=' + action.soundType);
     }
     default:
       return state;
@@ -453,6 +500,14 @@ export function useGlobalState() {
     dispatch({ type: ActionType.SwapTodoTask, oldIndex, newIndex });
   };
 
+  const setSound = (soundType: SoundType, soundIndex: number) => {
+    dispatch({
+      type: ActionType.SetSound,
+      soundType,
+      soundIndex
+    });
+  };
+
   React.useEffect(() => {
     if (timerStatus === TimerStatus.Play && prevTimeStamp !== null) {
       if (time > 0) {
@@ -499,6 +554,7 @@ export function useGlobalState() {
     setTaskText,
     deleteTask,
     toggleTaskDone,
-    swapTodoTasks
+    swapTodoTasks,
+    setSound
   };
 }

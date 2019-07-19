@@ -78,13 +78,14 @@ const DoneCircle = styled.div<DoneProps>`
   font-size: 10px;
   border-style: solid;
   border-width: 2px;
-  border-color: ${props => (props.done ? doneColor : 'black')};
+  border-color: ${props => (props.done ? doneColor : 'rgb(140,140,140)')};
   /* cursor: ${props => (props.canClick ? 'pointer' : 'default')}; */
   cursor: pointer;
   flex-shrink: 0;
 
   &:hover {
-    /* opacity: 0.5; */
+    border-color: black;
+    color: black;
   }
 `;
 

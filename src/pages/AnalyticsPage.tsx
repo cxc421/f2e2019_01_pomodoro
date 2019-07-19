@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import { GroupBtnWrapper, GroupBtn } from '../components/GroupBtn';
 import PanelTableLayout from '../components/PanelTableLayout';
 import Highlight from '../components/Highlight';
@@ -133,47 +134,49 @@ const AnalyticsPage = () => {
 
   return (
     <Container>
-      <BtnArea>
-        <GroupBtnWrapper>
-          <GroupBtn
-            selected={isTomatoTab}
-            onClick={() => setTab(AnalyticTab.TOMATO)}
-          >
-            TOMATO
-          </GroupBtn>
-          <GroupBtn
-            selected={!isTomatoTab}
-            onClick={() => setTab(AnalyticTab.MISSION)}
-          >
-            MISSION
-          </GroupBtn>
-        </GroupBtnWrapper>
-      </BtnArea>
-      <PanelTableLayout headText="FOCUS TIME" style={{ marginBottom: 14 }}>
-        <FocusTimeArea>
-          <div>
-            <Highlight
-              title={`TODAY (${dateToStr(today, 'mm/dd')})`}
-              value={
-                isTomatoTab ? getTomatoesOfDay(today) : getMissionOfDay(today)
-              }
-              unit={unit}
-              canClickTitle={true}
-              clickTitleCallback={() => setWeekDate(today)}
-            />
-          </div>
-          <div>
-            <Highlight
-              title="WEEK"
-              value={isTomatoTab ? getTomatoesOfWeek() : getMissionsOfWeek()}
-              unit={unit}
-            />
-          </div>
-        </FocusTimeArea>
-      </PanelTableLayout>
-      <PanelTableLayout headText="CHART" titleRightElm={chartTableHeadElm}>
-        <LineChart pointList={computeWeekPointList()} />
-      </PanelTableLayout>
+      <PerfectScrollbar>
+        <BtnArea>
+          <GroupBtnWrapper>
+            <GroupBtn
+              selected={isTomatoTab}
+              onClick={() => setTab(AnalyticTab.TOMATO)}
+            >
+              TOMATO
+            </GroupBtn>
+            <GroupBtn
+              selected={!isTomatoTab}
+              onClick={() => setTab(AnalyticTab.MISSION)}
+            >
+              MISSION
+            </GroupBtn>
+          </GroupBtnWrapper>
+        </BtnArea>
+        <PanelTableLayout headText="FOCUS TIME" style={{ marginBottom: 14 }}>
+          <FocusTimeArea>
+            <div>
+              <Highlight
+                title={`TODAY (${dateToStr(today, 'mm/dd')})`}
+                value={
+                  isTomatoTab ? getTomatoesOfDay(today) : getMissionOfDay(today)
+                }
+                unit={unit}
+                canClickTitle={true}
+                clickTitleCallback={() => setWeekDate(today)}
+              />
+            </div>
+            <div>
+              <Highlight
+                title="WEEK"
+                value={isTomatoTab ? getTomatoesOfWeek() : getMissionsOfWeek()}
+                unit={unit}
+              />
+            </div>
+          </FocusTimeArea>
+        </PanelTableLayout>
+        <PanelTableLayout headText="CHART" titleRightElm={chartTableHeadElm}>
+          <LineChart pointList={computeWeekPointList()} />
+        </PanelTableLayout>
+      </PerfectScrollbar>
     </Container>
   );
 };

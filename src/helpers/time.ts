@@ -10,7 +10,7 @@ export function strPad2(number: number): string {
 }
 
 export const secToTimeText = (totalSeconds: number): string => {
-  const hours = Math.floor(totalSeconds / 60);
-  const secs = totalSeconds - hours * 60;
-  return `${strPad2(hours)}:${strPad2(secs)}`;
+  const minutes = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds - minutes * 60;
+  return `${strPad2(minutes)}:${strPad2(secs)}`;
 };
