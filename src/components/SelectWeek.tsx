@@ -8,6 +8,11 @@ interface SelectWeekProps {
   dt?: Date;
   toPrevWeek: () => void;
   toNextWeek: () => void;
+  disableToNextWeekBtn?: boolean;
+}
+
+interface IconProps {
+  disable?: boolean;
 }
 
 const Container = styled.div`
@@ -23,10 +28,10 @@ const DateText = styled.div`
   font-weight: normal;
 `;
 
-const Icon = styled.div`
+const Icon = styled.div<IconProps>`
   color: white;
   font-size: 24px;
-  cursor: pointer;
+  cursor: ${props => (props.disable ? 'default' : 'pointer')};
   > * {
     display: block;
   }
@@ -40,17 +45,24 @@ const Icon = styled.div`
   }
 
   &:hover {
-    color: #f44336;
+    color: ${props => (props.disable ? 'white' : '#f44336')};
   }
 `;
 
 const SelectWeek: React.FC<SelectWeekProps> = ({
   dt = new Date(),
   toPrevWeek,
-  toNextWeek
+  toNextWeek,
+  disableToNextWeekBtn = false
 }) => {
-  const startDateText = dateToStr(getWeekStartDate(dt));
-  const endDateText = dateToStr(getWeekEndDate(dt));
+  const startDateText = dateToStr(getWeekStartDate(dt), 'yyyy.mm.dd');
+  const endDateText = dateToStr(getWeekEndDate(dt), 'yyyy.mm.dd');
+
+  function onClickNextWeekBtn() {
+    if (!disableToNextWeekBtn) {
+      toNextWeek();
+    }
+  }
 
   return (
     <Container>
@@ -58,7 +70,7 @@ const SelectWeek: React.FC<SelectWeekProps> = ({
         <MdKeyboardArrowLeft />
       </Icon>
       <DateText>{`${startDateText} - ${endDateText}`}</DateText>
-      <Icon onClick={toNextWeek}>
+      <Icon onClick={onClickNextWeekBtn} disable={disableToNextWeekBtn}>
         <MdKeyboardArrowRight />
       </Icon>
     </Container>

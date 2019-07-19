@@ -23,8 +23,16 @@ export function getWeekEndDate(dt: Date): Date {
   return new Date(dt.setDate(diff));
 }
 
-export function dateToStr(dt: Date): string {
-  return `${dt.getFullYear()}.${strPad2(dt.getMonth() + 1)}.${strPad2(
-    dt.getDate()
-  )}`;
+type DateToStrType = 'yyyy.mm.dd' | 'mm/dd';
+
+export function dateToStr(dt: Date, type: DateToStrType): string {
+  if (type === 'yyyy.mm.dd') {
+    return `${dt.getFullYear()}.${strPad2(dt.getMonth() + 1)}.${strPad2(
+      dt.getDate()
+    )}`;
+  }
+  if (type === 'mm/dd') {
+    return `${strPad2(dt.getMonth() + 1)}/${strPad2(dt.getDate())}`;
+  }
+  throw new Error('unknown type for dateToStr(): type=' + type);
 }

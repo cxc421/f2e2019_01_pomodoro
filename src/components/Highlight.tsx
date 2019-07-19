@@ -1,22 +1,40 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css as _css } from 'styled-components';
 import { strPad2 } from '../helpers/time';
 
 interface HightlightProps {
   title?: string;
   value?: number;
   unit?: string;
+  canClickTitle?: boolean;
+  clickTitleCallback?: () => void;
+}
+
+interface TitleProp {
+  clickable?: boolean;
 }
 
 const Container = styled.div`
   padding-top: 20px;
   padding-bottom: 20px;
 `;
-const Title = styled.div`
+const Title = styled.div<TitleProp>`
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 18px;
   letter-spacing: 0.82px;
+
+  ${props => {
+    if (props.clickable) {
+      return _css`
+        cursor: pointer;
+        &:hover {
+          color: blue;
+        }
+      `;
+    }
+    return;
+  }};
 `;
 
 const Value = styled.div`
@@ -38,11 +56,21 @@ const Unit = styled.div`
 const Highlight: React.FC<HightlightProps> = ({
   title = '',
   value = 0,
-  unit = 'UNKNOWN'
+  unit = 'UNKNOWN',
+  canClickTitle = false,
+  clickTitleCallback
 }) => {
+  function onClickTitle() {
+    if (canClickTitle && clickTitleCallback) {
+      clickTitleCallback();
+    }
+  }
+
   return (
     <Container>
-      <Title>{title}</Title>
+      <Title clickable={canClickTitle} onClick={onClickTitle}>
+        {title}
+      </Title>
       <div>
         <Value>{strPad2(value)}</Value>
         <Unit>{`/${unit}`}</Unit>
