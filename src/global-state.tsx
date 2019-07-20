@@ -20,18 +20,17 @@ export enum TaskStatus {
   Rest
 }
 
-enum TOTAL_TIME {
+enum DEFAULT_TOTAL_TIME {
   WORK = 25 * 60 * 1000,
   REST = 5 * 60 * 1000
-  // WORK = 10 * 1000,
-  // REST = 5 * 1000
 }
 
 interface GlobalState {
   selectTaskId: string;
   timerStatus: TimerStatus;
   taskStatus: TaskStatus;
-  timeMax: number;
+  timeRest: number;
+  timeWork: number;
   time: number;
   todoTasks: Task[];
   doneTasks: Task[];
@@ -150,11 +149,10 @@ const initialState: GlobalState = {
   selectTaskId: initTodoTasks[0].id || '',
   timerStatus: TimerStatus.Stop,
   taskStatus: TaskStatus.Work,
-  timeMax: TOTAL_TIME.WORK,
-  time: TOTAL_TIME.WORK,
-  // taskStatus: TaskStatus.Rest,
-  // timeMax: TOTAL_TIME.REST,
-  // time: TOTAL_TIME.REST,
+  time: DEFAULT_TOTAL_TIME.WORK,
+  timeRest: DEFAULT_TOTAL_TIME.REST,
+  timeWork: DEFAULT_TOTAL_TIME.WORK,
+
   todoTasks: initTodoTasks,
   doneTasks: initDoneTasks,
   soundBasePath: '/sounds',
@@ -182,7 +180,8 @@ enum ActionType {
   AddNewTomato,
   ToggleTaskDoneDate,
   SwapTodoTask,
-  SetSound
+  SetSound,
+  SetTotalTime
 }
 type AddNewTomatoAction = { type: ActionType.AddNewTomato; taskId: string };
 type AddNewTodoTaskAction = {
@@ -223,6 +222,12 @@ type SetSoundAction = {
   soundIndex: number;
 };
 
+type SetTotalTimeAction = {
+  type: ActionType.SetTotalTime;
+  taskStatus: TaskStatus;
+  totalTime: number;
+};
+
 type Action =
   | SetTimeAction
   | SetTimerStatusAction
@@ -234,7 +239,8 @@ type Action =
   | ToggleTaskDoneDateAction
   | DeleteTaskAction
   | SwapTodoTaskAction
-  | SetSoundAction;
+  | SetSoundAction
+  | SetTotalTimeAction;
 
 function reducer(state: GlobalState, action: Action): GlobalState {
   switch (action.type) {
@@ -251,15 +257,12 @@ function reducer(state: GlobalState, action: Action): GlobalState {
       };
     }
     case ActionType.SetTaskStatus: {
-      const timeMax =
-        action.taskStatus === TaskStatus.Work
-          ? TOTAL_TIME.WORK
-          : TOTAL_TIME.REST;
+      const time =
+        action.taskStatus === TaskStatus.Work ? state.timeWork : state.timeRest;
       return {
         ...state,
         taskStatus: action.taskStatus,
-        timeMax,
-        time: timeMax
+        time
       };
     }
     case ActionType.SetTaskText: {
@@ -376,6 +379,30 @@ function reducer(state: GlobalState, action: Action): GlobalState {
         };
       }
       throw new Error('unknown setSound type=' + action.soundType);
+    }
+    case ActionType.SetTotalTime: {
+      let newTime = state.time;
+      if (state.taskStatus === action.taskStatus) {
+        if (
+          state.timerStatus === TimerStatus.Stop ||
+          state.time > action.totalTime
+        ) {
+          newTime = action.totalTime;
+        }
+      }
+
+      if (action.taskStatus === TaskStatus.Work) {
+        return {
+          ...state,
+          timeWork: action.totalTime,
+          time: newTime
+        };
+      }
+      return {
+        ...state,
+        timeRest: action.totalTime,
+        time: newTime
+      };
     }
     default:
       return state;
@@ -508,6 +535,13 @@ export function useGlobalState() {
     });
   };
 
+  const setTotalTime = (taskStatus: TaskStatus, totalTime: number) =>
+    dispatch({
+      type: ActionType.SetTotalTime,
+      taskStatus,
+      totalTime
+    });
+
   React.useEffect(() => {
     if (timerStatus === TimerStatus.Play && prevTimeStamp !== null) {
       if (time > 0) {
@@ -555,6 +589,7 @@ export function useGlobalState() {
     deleteTask,
     toggleTaskDone,
     swapTodoTasks,
-    setSound
+    setSound,
+    setTotalTime
   };
 }

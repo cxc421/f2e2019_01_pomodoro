@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { MdPlayArrow, MdPause } from 'react-icons/md';
 import Ranger from './Ranger';

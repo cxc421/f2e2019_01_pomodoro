@@ -42,7 +42,15 @@ const TaskText = styled.div`
 
 const Timer: React.FC = () => {
   const {
-    state: { selectTaskId, todoTasks, time, timeMax, timerStatus, taskStatus },
+    state: {
+      selectTaskId,
+      todoTasks,
+      timeRest,
+      timeWork,
+      time,
+      timerStatus,
+      taskStatus
+    },
     startTimer,
     pauseTimer,
     cancelTimer
@@ -50,6 +58,7 @@ const Timer: React.FC = () => {
   const timeInSec = Math.round(time / 1000);
   const selectTask = todoTasks.find(task => task.id === selectTaskId);
   const text = selectTask ? selectTask.text : '';
+  const timeMax = taskStatus === TaskStatus.Work ? timeWork : timeRest;
   const percent = (time * 100) / timeMax;
   const status = timerStatus === TimerStatus.Stop ? 'pause' : 'playing';
   const popupText =
