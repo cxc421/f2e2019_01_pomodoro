@@ -57,7 +57,7 @@ const TodoPage = () => {
       <PerfectScrollbar>
         <AddMissionInput />
         <PanelTableLayout
-          headText="TO-DO"
+          headText="未完成"
           collapsible={true}
           style={todoTableStyle}
         >
@@ -69,7 +69,7 @@ const TodoPage = () => {
           />
         </PanelTableLayout>
         <PanelTableLayout
-          headText="DONE"
+          headText="已完成"
           collapsible={true}
           style={doneTableStyle}
         >

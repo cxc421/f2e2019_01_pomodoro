@@ -13,13 +13,15 @@ export function isSameDay(dt1: Date, dt2: Date): boolean {
 
 export function getWeekStartDate(dt: Date): Date {
   dt = new Date(dt.getTime()); // clone
-  const diff = dt.getDate() - dt.getDay() + 1;
+  const day = dt.getDay();
+  const diff = dt.getDate() - (day > 0 ? day : 7) + 1;
   return new Date(dt.setDate(diff));
 }
 
 export function getWeekEndDate(dt: Date): Date {
   dt = new Date(dt.getTime()); // clone
-  const diff = dt.getDate() - dt.getDay() + 7;
+  const day = dt.getDay();
+  const diff = dt.getDate() - (day > 0 ? day : 7) + 7;
   return new Date(dt.setDate(diff));
 }
 

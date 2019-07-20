@@ -49,17 +49,17 @@ const App: React.FC = () => {
 
   const pages = [
     {
-      tabText: 'TO DO LIST',
+      tabText: '待辦事項',
       TabIcon: MdList,
       Page: TodoPage
     },
     {
-      tabText: 'ANALYTICS',
+      tabText: '工作分析',
       TabIcon: FaBullseye,
       Page: AnalyticPage
     },
     {
-      tabText: 'SETTING',
+      tabText: '進階設定',
       TabIcon: MdSettings,
       Page: SettingPage
     }

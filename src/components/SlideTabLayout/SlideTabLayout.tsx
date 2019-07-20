@@ -4,6 +4,7 @@ import { IconType } from 'react-icons';
 import Tab from './Tab';
 
 const horizontalPadding = 10;
+const transitionDuration = '500ms';
 
 interface Animating {
   animating: boolean;
@@ -22,7 +23,7 @@ const blinkAnimate = keyframes`
 `;
 
 const blinkAnimateStyle = _css`
-  animation: ${blinkAnimate} 0.5s ease-in-out 0s 1 both;
+  animation: ${blinkAnimate} ${transitionDuration} ease-in-out 0s 1 both;
 `;
 
 const Container = styled.div`
@@ -49,7 +50,7 @@ const PageWrapper = styled.div<Animating>`
   margin-left: ${horizontalPadding}px;
   height: 100%;
   flex-shrink: 0;
-  transition: transform 0.5s ease-in-out;
+  transition: transform ${transitionDuration} ease-in-out;
   ${props => (props.animating ? blinkAnimateStyle : '')}
 `;
 
@@ -66,7 +67,7 @@ const MenuArea = styled.div`
 const TabBottom = styled.div`
   height: 5px;
   background: #f44336;
-  transition: transform 0.5s ease-in-out;
+  transition: transform ${transitionDuration} ease-in-out;
   transform: translateX(0);
   position: absolute;
   bottom: 0;
@@ -84,9 +85,9 @@ interface SlideTabLayoutProps {
 }
 
 const SlideTabLayout: React.FC<SlideTabLayoutProps> = ({ pages }) => {
-  const tabSize = 157;
-  const tabMargin = 22;
-  const [tabIndex, setTabIndex] = useState(2);
+  const tabSize = 128;
+  const tabMargin = 25;
+  const [tabIndex, setTabIndex] = useState(1);
   const [animating, setAnimating] = useState(false);
 
   const tabBottomStyle: React.CSSProperties = {

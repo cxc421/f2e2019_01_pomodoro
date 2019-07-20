@@ -55,6 +55,9 @@ const SelectWeek: React.FC<SelectWeekProps> = ({
   toNextWeek,
   disableToNextWeekBtn = false
 }) => {
+  console.log(dateToStr(dt, 'yyyy.mm.dd'));
+  console.log(dateToStr(getWeekStartDate(dt), 'yyyy.mm.dd'));
+
   const startDateText = dateToStr(getWeekStartDate(dt), 'yyyy.mm.dd');
   const endDateText = dateToStr(getWeekEndDate(dt), 'yyyy.mm.dd');
 

@@ -11,18 +11,26 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: whitesmoke;
+  /* background: whitesmoke; */
 `;
 
 const Row = styled.div`
   position: relative;
-  padding: 20px 0 20px 30px;
+  padding: 20px 20px 20px 20px;
   display: flex;
   align-items: center;
+
+  &:first-child {
+    margin-top: 5px;
+  }
+
+  &:last-child {
+    margin-top: -20px;
+  }
 `;
 
 const Title = styled.div`
-  font-size: 20px;
+  font-size: 19px;
   font-weight: bold;
 `;
 
@@ -96,10 +104,14 @@ const SettingPage = () => {
     setTotalTime(TaskStatus.Rest, newMinute * 60000);
   }
 
+  const loopPanelStyle: React.CSSProperties = Object.assign({}, panelStyle, {
+    display: 'none'
+  });
+
   return (
     <Container>
       <PerfectScrollbar>
-        <PanelTableLayout headText="RINGTONES">
+        <PanelTableLayout headText="鈴聲">
           <Row>
             <Title>工作結束:</Title>
             <Select value={soundWorkIndex} onChange={onWorkSoundChange}>
@@ -115,7 +127,7 @@ const SettingPage = () => {
             <AudioPlayer src={restSrc} />
           </Row>
         </PanelTableLayout>
-        <PanelTableLayout headText="TIME" style={panelStyle}>
+        <PanelTableLayout headText="時間" style={panelStyle}>
           <Row>
             <Title>工作時間:</Title>
             <NumberInput value={timeWorkMin} onChange={onWorkTimeChange} />
@@ -127,7 +139,7 @@ const SettingPage = () => {
             <InputeUnit>分鐘</InputeUnit>
           </Row>
         </PanelTableLayout>
-        <PanelTableLayout headText="LOOP" style={panelStyle}>
+        <PanelTableLayout headText="LOOP" style={loopPanelStyle}>
           <Row style={{ marginTop: 5 }}>
             <input type="checkbox" id="auto-rest-cbx" />
             <Paragaph>工作結束後自動開始休息</Paragaph>

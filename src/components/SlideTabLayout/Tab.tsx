@@ -11,11 +11,11 @@ const Container = styled.div<HaveWidth>`
   /* background: blueviolet; */
   display: inline-flex;
   color: ${props => (props.isSelect ? '#F44336' : 'black')};
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
   align-items: center;
   width: ${props => props.width}px;
-  justify-content: center;
+  /* justify-content: center; */
   padding-bottom: 7px;
   cursor: pointer;
   margin-right: ${props => props.margin}px;
@@ -27,12 +27,12 @@ const Container = styled.div<HaveWidth>`
     transition-duration: 0.3s;
     color: ${props => (props.isSelect ? '#F44336' : 'rgba(0,0,0,0.5)')};
   }
-  transform: translateX(-3px); /* fix */
+  /* transform: translateX(-3px); fix */
 `;
 
 const IconWrapper = styled.div`
-  margin-right: 10px;
-  font-size: 28px;
+  margin-right: 5px;
+  font-size: 26px;
   display: flex;
   align-items: center;
 `;

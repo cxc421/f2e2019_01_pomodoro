@@ -47,7 +47,7 @@ const AnalyticsPage = () => {
   const [tab, setTab] = useState(AnalyticTab.TOMATO);
   const [weekDate, setWeekDate] = useState(new Date());
   const isTomatoTab = tab === AnalyticTab.TOMATO;
-  const unit = isTomatoTab ? 'TOMATO' : 'MISSION';
+  const unit = isTomatoTab ? '番茄' : '工作';
   const disableToNextWeekBtn = isSameDay(
     getWeekStartDate(today),
     getWeekStartDate(weekDate)
@@ -141,21 +141,21 @@ const AnalyticsPage = () => {
               selected={isTomatoTab}
               onClick={() => setTab(AnalyticTab.TOMATO)}
             >
-              TOMATO
+              番茄
             </GroupBtn>
             <GroupBtn
               selected={!isTomatoTab}
               onClick={() => setTab(AnalyticTab.MISSION)}
             >
-              MISSION
+              工作
             </GroupBtn>
           </GroupBtnWrapper>
         </BtnArea>
-        <PanelTableLayout headText="FOCUS TIME" style={{ marginBottom: 14 }}>
+        <PanelTableLayout headText="專注時間" style={{ marginBottom: 14 }}>
           <FocusTimeArea>
             <div>
               <Highlight
-                title={`TODAY (${dateToStr(today, 'mm/dd')})`}
+                title={`今日 (${dateToStr(today, 'mm/dd')})`}
                 value={
                   isTomatoTab ? getTomatoesOfDay(today) : getMissionOfDay(today)
                 }
@@ -166,14 +166,14 @@ const AnalyticsPage = () => {
             </div>
             <div>
               <Highlight
-                title="WEEK"
+                title="當周"
                 value={isTomatoTab ? getTomatoesOfWeek() : getMissionsOfWeek()}
                 unit={unit}
               />
             </div>
           </FocusTimeArea>
         </PanelTableLayout>
-        <PanelTableLayout headText="CHART" titleRightElm={chartTableHeadElm}>
+        <PanelTableLayout headText="圖表" titleRightElm={chartTableHeadElm}>
           <LineChart pointList={computeWeekPointList()} />
         </PanelTableLayout>
       </PerfectScrollbar>
