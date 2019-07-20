@@ -80,7 +80,7 @@ const AddMissionInput: React.FC = () => {
 
   return (
     <Container onSubmit={onSubmit}>
-      <Input placeholder="新增工作…" ref={inputRef} />
+      <Input placeholder="新增任務…" ref={inputRef} />
       <ApplyBtn onClick={onSubmit}>
         <MdAdd />
       </ApplyBtn>

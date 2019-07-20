@@ -47,7 +47,7 @@ const AnalyticsPage = () => {
   const [tab, setTab] = useState(AnalyticTab.TOMATO);
   const [weekDate, setWeekDate] = useState(new Date());
   const isTomatoTab = tab === AnalyticTab.TOMATO;
-  const unit = isTomatoTab ? '番茄' : '工作';
+  const unit = isTomatoTab ? '番茄' : '任務';
   const disableToNextWeekBtn = isSameDay(
     getWeekStartDate(today),
     getWeekStartDate(weekDate)
@@ -147,7 +147,7 @@ const AnalyticsPage = () => {
               selected={!isTomatoTab}
               onClick={() => setTab(AnalyticTab.MISSION)}
             >
-              工作
+              任務
             </GroupBtn>
           </GroupBtnWrapper>
         </BtnArea>

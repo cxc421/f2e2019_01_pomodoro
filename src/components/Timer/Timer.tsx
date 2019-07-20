@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Spinner from './Spinner';
 import Popup from '../Popup';
+import Sound from './Sound';
 import { useGlobalState, TimerStatus, TaskStatus } from '../../global-state';
 import { secToTimeText } from '../../helpers/time';
 
@@ -34,6 +35,7 @@ const TimeText = styled.div`
 const TaskText = styled.div`
   font-weight: bold;
   font-size: 22px;
+  font-size: 28px;
   color: white;
   margin-top: 17px;
   letter-spacing: 1px;
@@ -101,6 +103,7 @@ const Timer: React.FC = () => {
         onClickCancelBtn={onClickPropupCancelBtn}
         onClickApplyBtn={onClickPopupApplyBtn}
       />
+      <Sound />
     </Container>
   );
 };

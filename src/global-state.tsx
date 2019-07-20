@@ -21,8 +21,10 @@ export enum TaskStatus {
 }
 
 enum DEFAULT_TOTAL_TIME {
-  WORK = 25 * 60 * 1000,
-  REST = 5 * 60 * 1000
+  // WORK = 25 * 60 * 1000,
+  // REST = 5 * 60 * 1000
+  WORK = 10 * 1000,
+  REST = 5 * 1000
 }
 
 interface GlobalState {
@@ -46,13 +48,7 @@ type ContextType = [GlobalState, React.Dispatch<Action>] | null;
 const initTodoTasks: Task[] = [
   {
     id: uuid(),
-    text: '蕃茄鐘設定頁面: 時間',
-    doneDate: null,
-    tomatoes: []
-  },
-  {
-    id: uuid(),
-    text: '蕃茄鐘設定頁面: 循環',
+    text: '蕃茄鐘鈴聲',
     doneDate: null,
     tomatoes: []
   },
@@ -61,25 +57,25 @@ const initTodoTasks: Task[] = [
     text: '保存全域設定',
     doneDate: null,
     tomatoes: []
-  },
-  {
-    id: uuid(),
-    text: '響應式 Layout',
-    doneDate: null,
-    tomatoes: []
-  },
-  {
-    id: uuid(),
-    text: '蕃茄鐘分析頁面: LineChart 動畫',
-    doneDate: null,
-    tomatoes: []
-  },
-  {
-    id: uuid(),
-    text: '蕃茄鐘分析頁面: 數字動畫',
-    doneDate: null,
-    tomatoes: []
   }
+  // {
+  //   id: uuid(),
+  //   text: '響應式 Layout',
+  //   doneDate: null,
+  //   tomatoes: []
+  // },
+  // {
+  //   id: uuid(),
+  //   text: '蕃茄鐘分析頁面: LineChart 動畫',
+  //   doneDate: null,
+  //   tomatoes: []
+  // },
+  // {
+  //   id: uuid(),
+  //   text: '蕃茄鐘分析頁面: 數字動畫',
+  //   doneDate: null,
+  //   tomatoes: []
+  // }
 ];
 
 const initDoneTasks = [
