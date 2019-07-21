@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Spinner from './Spinner';
 import Popup from '../Popup';
 import Sound from './Sound';
+import Points from '../Points';
 import { useGlobalState, TimerStatus, TaskStatus } from '../../global-state';
 import { secToTimeText } from '../../helpers/time';
 
@@ -34,12 +35,11 @@ const TimeText = styled.div`
 
 const TaskText = styled.div`
   font-weight: bold;
-  font-size: 22px;
-  font-size: 28px;
+  font-size: 30px;
   color: white;
   margin-top: 17px;
   letter-spacing: 1px;
-  transform: translateY(3px);
+  transform: translateY(10px);
 `;
 
 const Timer: React.FC = () => {
@@ -67,6 +67,8 @@ const Timer: React.FC = () => {
     taskStatus === TaskStatus.Work
       ? '您目前正在進行一個番茄時鐘，確定要放棄嗎？'
       : '您要跳過休息嗎？';
+  const selectTaskTomatoNum = selectTask ? selectTask.tomatoes.length : 0;
+  console.log({ selectTaskTomatoNum });
 
   function onClickSpinner() {
     switch (timerStatus) {
@@ -97,6 +99,18 @@ const Timer: React.FC = () => {
       />
       <TimeText>{secToTimeText(timeInSec)}</TimeText>
       <TaskText>{text}</TaskText>
+      <Points
+        num={selectTaskTomatoNum}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: '50%',
+          transform: 'translate(-50%, calc(100% + 25px))',
+
+          color: 'white',
+          fontSize: 29
+        }}
+      />
       <Popup
         show={timerStatus === TimerStatus.Pause}
         text={popupText}

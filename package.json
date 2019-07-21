@@ -26,10 +26,11 @@
     "uuid": "^3.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "npm run build:sound_name_json && react-scripts start",
+    "build": "build:sound_name_json && react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build:sound_name_json": "node scripts/gen_sound_names_json.js"
   },
   "eslintConfig": {
     "extends": "react-app"

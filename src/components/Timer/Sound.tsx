@@ -40,21 +40,17 @@ const Sound: React.FC = () => {
   useEffect(() => {
     if (taskStatus !== prevTaskStatus) {
       if (taskStatus === TaskStatus.Work) {
-        return setWorkSrc(
-          `${soundBasePath}/${soundNameList[soundWorkIndex]}.mp3`
-        );
+        return setWorkSrc(`${soundBasePath}/${soundNameList[soundWorkIndex]}`);
       }
       if (taskStatus === TaskStatus.Rest) {
-        return setRestSrc(
-          `${soundBasePath}/${soundNameList[soundRestIndex]}.mp3`
-        );
+        return setRestSrc(`${soundBasePath}/${soundNameList[soundRestIndex]}`);
       }
     }
     if (prevWorkIndex !== soundWorkIndex) {
-      setWorkSrc(`${soundBasePath}/${soundNameList[soundWorkIndex]}.mp3`);
+      setWorkSrc(`${soundBasePath}/${soundNameList[soundWorkIndex]}`);
     }
     if (prevRestIndex !== soundRestIndex) {
-      setRestSrc(`${soundBasePath}/${soundNameList[soundRestIndex]}.mp3`);
+      setRestSrc(`${soundBasePath}/${soundNameList[soundRestIndex]}`);
     }
   }, [
     taskStatus,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import uuid from 'uuid/v1';
 import { makeDate } from './helpers/date';
+import soundNameList from './sound_names.json';
 
 export interface Task {
   id: string;
@@ -173,7 +174,7 @@ const initialState: GlobalState = {
   todoTasks: initTodoTasks,
   doneTasks: initDoneTasks,
   soundBasePath: '/sounds',
-  soundNameList: ['Super Mario - Game Start', '高雄發大財'],
+  soundNameList: soundNameList,
   soundWorkIndex: 0,
   soundRestIndex: 1
 };
@@ -545,6 +546,23 @@ export function useGlobalState() {
     dispatch({ type: ActionType.SwapTodoTask, oldIndex, newIndex });
   };
 
+  const switchTask = (taskId: string) => {
+    setPrevTimeStamp(null);
+    dispatch({
+      type: ActionType.SetTimerStatus,
+      timerStatus: TimerStatus.Stop
+    });
+    // 只要放棄, 都跳回 WORK 狀態
+    dispatch({
+      type: ActionType.SetTaskStatus,
+      taskStatus: TaskStatus.Work
+    });
+    dispatch({
+      type: ActionType.SetSelectTask,
+      taskId
+    });
+  };
+
   const setSound = (soundType: SoundType, soundIndex: number) => {
     dispatch({
       type: ActionType.SetSound,
@@ -591,6 +609,19 @@ export function useGlobalState() {
             type: ActionType.SetTimerStatus,
             timerStatus: TimerStatus.Stop
           });
+          // To Next Work
+          // const selectWorkIndex = todoTasks.findIndex(
+          //   todoTask => todoTask.id === selectTaskId
+          // );
+          // if (selectWorkIndex >= 0) {
+          //   const nextWrokIndex =
+          //     selectWorkIndex < todoTasks.length - 2 ? selectWorkIndex + 1 : 0;
+          //   dispatch({
+          //     type: ActionType.SetSelectTask,
+          //     taskId: todoTasks[nextWrokIndex].id
+          //   });
+          // }
+
           setPrevTimeStamp(null);
         }
       }
@@ -608,6 +639,7 @@ export function useGlobalState() {
     addNewTask,
     setTaskText,
     deleteTask,
+    switchTask,
     toggleTaskDone,
     swapTodoTasks,
     setSound,
@@ -649,6 +681,13 @@ function getLoData(): GlobalState {
     loState.timerStatus = TimerStatus.Stop;
     loState.taskStatus = TaskStatus.Work;
     loState.time = loState.timeWork;
+    loState.soundNameList = soundNameList;
+    if (loState.soundRestIndex >= soundNameList.length) {
+      loState.soundRestIndex = 0;
+    }
+    if (loState.soundWorkIndex >= soundNameList.length) {
+      loState.soundWorkIndex = 0;
+    }
 
     return loState;
   } catch (err) {

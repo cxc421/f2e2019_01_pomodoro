@@ -1,9 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styled, { css as _css } from 'styled-components';
-// import {  } from 'react-sortable-hoc';
 import { SortableElement } from 'react-sortable-hoc';
 import { MdPlayCircleOutline, MdCheck, MdEdit, MdClear } from 'react-icons/md';
-import Points from './Points';
+import Points from '../Points';
 
 type ItemMode = 'EDIT' | 'NORMAL';
 
@@ -16,6 +15,7 @@ interface ItemProps {
   onClickDoneBtn: () => void;
   onClickEditBtn: () => void;
   onClickOutside: () => void;
+  onClickText: () => void;
   onUpdateText: (str: string) => void;
   onClickDeleteBtn: () => void;
 }
@@ -90,7 +90,22 @@ const DoneCircle = styled.div<DoneProps>`
 `;
 
 const ItemText = styled.span<DoneProps>`
-  text-decoration: ${props => (props.done ? 'line-through' : 'none')};
+  /* text-decoration: ${props => (props.done ? 'line-through' : 'none')}; */
+  ${props => {
+    if (props.done) {
+      return _css`
+        text-decoration: line-through;
+      `;
+    } else {
+      return _css`
+        cursor: pointer;
+        transition: color 200ms;
+        &:hover {
+          color: #4258d4;
+        }
+      `;
+    }
+  }}
 `;
 
 const ItemInput = styled.input`
@@ -159,6 +174,7 @@ const Item: React.FC<ItemProps> = ({
   onClickEditBtn,
   onClickOutside,
   onClickDeleteBtn,
+  onClickText,
   onUpdateText
 }) => {
   const [draging, setDragging] = useState(false);
@@ -224,6 +240,12 @@ const Item: React.FC<ItemProps> = ({
     }
   }
 
+  function onClickItemText() {
+    if (!done) {
+      onClickText();
+    }
+  }
+
   return (
     <ItemContainer
       onMouseDown={handleContainerMouseDown}
@@ -238,7 +260,9 @@ const Item: React.FC<ItemProps> = ({
             <DoneCircle done={done} canClick={!done} onClick={onClickDoneBtn}>
               {done && <MdCheck />}
             </DoneCircle>
-            <ItemText done={done}>{text}</ItemText>
+            <ItemText done={done} onClick={onClickItemText}>
+              {text}
+            </ItemText>
           </>
         ) : (
           <>

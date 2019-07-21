@@ -20,7 +20,8 @@ const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
     startTimer,
     toggleTaskDone,
     setTaskText,
-    deleteTask
+    deleteTask,
+    switchTask
   } = useGlobalState();
 
   if (prevTasks && tasks.length !== prevTasks.length) {
@@ -44,6 +45,7 @@ const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
           onClickEditBtn={() => setEditItemId(task.id)}
           onClickOutside={() => setEditItemId('')}
           onClickDeleteBtn={() => deleteTask(task.id)}
+          onClickText={() => switchTask(task.id)}
           onUpdateText={text => setTaskText(task.id, text)}
           disabled={editItemId !== task.id}
         />

@@ -74,14 +74,14 @@ const SettingPage = () => {
   const panelStyle: React.CSSProperties = {
     marginTop: 20
   };
-  const workSrc = `${soundBasePath}/${soundNameList[soundWorkIndex]}.mp3`;
-  const restSrc = `${soundBasePath}/${soundNameList[soundRestIndex]}.mp3`;
+  const workSrc = `${soundBasePath}/${soundNameList[soundWorkIndex]}`;
+  const restSrc = `${soundBasePath}/${soundNameList[soundRestIndex]}`;
   const timeWorkMin = timeWork / 60000;
   const timeRestMin = timeRest / 60000;
 
   const optionJsx = soundNameList.map((soundName, index) => (
     <option value={index} key={index}>
-      {soundName}
+      {soundName.split('.')[0]}
     </option>
   ));
 

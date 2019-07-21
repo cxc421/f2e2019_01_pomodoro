@@ -46,7 +46,9 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
   const [status, setStatus] = useState(PlayerStatus.Pause);
   const [curSec, setCurSec] = useState(0);
   const [totalSec, setTotalSec] = useState(0);
-  const percent = totalSec > 0 ? (100 * curSec) / totalSec : 0;
+  const percent = totalSec > 0 ? 100 * (curSec / totalSec) : 0;
+
+  console.log({ curSec, totalSec });
 
   function onAudioPlay() {
     setStatus(PlayerStatus.Play);
@@ -110,4 +112,4 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
   );
 };
 
-export default AudioPlayer;
+export default React.memo(AudioPlayer);

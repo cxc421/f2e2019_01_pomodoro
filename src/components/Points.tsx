@@ -4,6 +4,7 @@ import { MdRadioButtonChecked } from 'react-icons/md';
 
 interface PointsProps {
   num: number;
+  style?: React.CSSProperties;
 }
 
 const Container = styled.div`
@@ -20,17 +21,18 @@ const Icon = styled.div`
   }
 `;
 
-const Points: React.FC<PointsProps> = ({ num }) => {
+const Points: React.FC<PointsProps> = ({ num, style }) => {
   const icons = [];
+  const iconSize = style && style.fontSize ? style.fontSize : 20;
   for (let i = 0; i < num; i++) {
     icons.push(
-      <Icon key={i}>
+      <Icon key={i} style={{ fontSize: iconSize }}>
         <MdRadioButtonChecked />
       </Icon>
     );
   }
 
-  return <Container>{icons}</Container>;
+  return <Container style={style}>{icons}</Container>;
 };
 
 export default React.memo(Points);
