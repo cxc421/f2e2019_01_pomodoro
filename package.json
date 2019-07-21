@@ -1,5 +1,6 @@
 {
-  "name": "f2e2019_01_pomodoro_2",
+  "homepage": "https://yourusername.github.io/f2e2019_01_pomodoro",
+  "name": "f2e2019_01_pomodoro",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,6 +14,7 @@
     "@types/styled-components": "^4.1.18",
     "@types/uuid": "^3.4.5",
     "fontfaceobserver": "^2.1.0",
+    "gh-pages": "^2.0.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-icons": "^3.7.0",
@@ -27,10 +29,13 @@
   },
   "scripts": {
     "start": "npm run build:sound_name_json && react-scripts start",
-    "build": "build:sound_name_json && react-scripts build",
+    "build": "npm run build:sound_name_json && react-scripts build && npm run copy:sound_files",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build:sound_name_json": "node scripts/gen_sound_names_json.js"
+    "build:sound_name_json": "node scripts/gen_sound_names_json.js",
+    "copy:sound_files": "cpy public/static/sounds build/static/sounds",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -46,5 +51,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cpy-cli": "^2.0.0"
   }
 }

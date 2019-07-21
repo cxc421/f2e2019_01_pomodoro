@@ -78,3 +78,5 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+console.log('App loaded - v2');

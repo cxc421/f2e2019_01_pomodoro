@@ -68,7 +68,7 @@ const Timer: React.FC = () => {
       ? '您目前正在進行一個番茄時鐘，確定要放棄嗎？'
       : '您要跳過休息嗎？';
   const selectTaskTomatoNum = selectTask ? selectTask.tomatoes.length : 0;
-  console.log({ selectTaskTomatoNum });
+  // console.log({ selectTaskTomatoNum });
 
   function onClickSpinner() {
     switch (timerStatus) {

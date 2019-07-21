@@ -19,10 +19,10 @@ const Sound: React.FC = () => {
   const prevWorkIndex = usePrevious<TaskStatus>(soundWorkIndex);
   const prevRestIndex = usePrevious<TaskStatus>(soundRestIndex);
   const [workSrc, setWorkSrc] = useState(
-    `${soundBasePath}/${soundNameList[soundWorkIndex]}.mp3`
+    `${soundBasePath}/${soundNameList[soundWorkIndex]}`
   );
   const [restSrc, setRestSrc] = useState(
-    `${soundBasePath}/${soundNameList[soundRestIndex]}.mp3`
+    `${soundBasePath}/${soundNameList[soundRestIndex]}`
   );
 
   function playWorkSound() {

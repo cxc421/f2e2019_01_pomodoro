@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import uuid from 'uuid/v1';
 import { makeDate } from './helpers/date';
 import soundNameList from './sound_names.json';
+const soundBasePath = './static/sounds';
 
 export interface Task {
   id: string;
@@ -70,34 +71,26 @@ type ContextType = [GlobalState, React.Dispatch<Action>] | null;
 const initTodoTasks: Task[] = [
   {
     id: uuid(),
-    text: '蕃茄鐘鈴聲',
+    text: '響應式 Layout',
     doneDate: null,
-    tomatoes: []
+    tomatoes: [makeDate(2019, 7, 20), makeDate(2019, 7, 21)]
   },
   {
     id: uuid(),
-    text: '保存全域設定',
+    text: 'LineChart 動畫',
     doneDate: null,
-    tomatoes: []
+    tomatoes: [makeDate(2019, 7, 21)]
+  },
+  {
+    id: uuid(),
+    text: '數字動畫',
+    doneDate: null,
+    tomatoes: [
+      makeDate(2019, 7, 19),
+      makeDate(2019, 7, 20),
+      makeDate(2019, 7, 21)
+    ]
   }
-  // {
-  //   id: uuid(),
-  //   text: '響應式 Layout',
-  //   doneDate: null,
-  //   tomatoes: []
-  // },
-  // {
-  //   id: uuid(),
-  //   text: '蕃茄鐘分析頁面: LineChart 動畫',
-  //   doneDate: null,
-  //   tomatoes: []
-  // },
-  // {
-  //   id: uuid(),
-  //   text: '蕃茄鐘分析頁面: 數字動畫',
-  //   doneDate: null,
-  //   tomatoes: []
-  // }
 ];
 
 const initDoneTasks = [
@@ -160,6 +153,23 @@ const initDoneTasks = [
       makeDate(2019, 7, 20),
       makeDate(2019, 7, 20)
     ]
+  },
+  {
+    id: uuid(),
+    text: '蕃茄鐘鈴聲',
+    doneDate: makeDate(2019, 7, 21),
+    tomatoes: [
+      makeDate(2019, 7, 20),
+      makeDate(2019, 7, 20),
+      makeDate(2019, 7, 21),
+      makeDate(2019, 7, 21)
+    ]
+  },
+  {
+    id: uuid(),
+    text: '保存全域設定',
+    doneDate: makeDate(2019, 7, 21),
+    tomatoes: [makeDate(2019, 7, 21), makeDate(2019, 7, 21)]
   }
 ];
 
@@ -173,7 +183,7 @@ const initialState: GlobalState = {
 
   todoTasks: initTodoTasks,
   doneTasks: initDoneTasks,
-  soundBasePath: '/sounds',
+  soundBasePath,
   soundNameList: soundNameList,
   soundWorkIndex: 0,
   soundRestIndex: 1
@@ -682,6 +692,7 @@ function getLoData(): GlobalState {
     loState.taskStatus = TaskStatus.Work;
     loState.time = loState.timeWork;
     loState.soundNameList = soundNameList;
+    loState.soundBasePath = soundBasePath;
     if (loState.soundRestIndex >= soundNameList.length) {
       loState.soundRestIndex = 0;
     }

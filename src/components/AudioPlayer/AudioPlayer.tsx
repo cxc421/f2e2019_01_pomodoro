@@ -48,7 +48,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src }) => {
   const [totalSec, setTotalSec] = useState(0);
   const percent = totalSec > 0 ? 100 * (curSec / totalSec) : 0;
 
-  console.log({ curSec, totalSec });
+  // console.log({ curSec, totalSec });
 
   function onAudioPlay() {
     setStatus(PlayerStatus.Play);
