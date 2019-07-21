@@ -21,10 +21,8 @@ export enum TaskStatus {
 }
 
 enum DEFAULT_TOTAL_TIME {
-  // WORK = 25 * 60 * 1000,
-  // REST = 5 * 60 * 1000
-  WORK = 10 * 1000,
-  REST = 5 * 1000
+  WORK = 25 * 60 * 1000,
+  REST = 5 * 60 * 1000
 }
 
 interface GlobalState {
@@ -36,6 +34,29 @@ interface GlobalState {
   time: number;
   todoTasks: Task[];
   doneTasks: Task[];
+
+  soundBasePath: string;
+  soundNameList: string[];
+  soundWorkIndex: number;
+  soundRestIndex: number;
+}
+
+interface LoTask {
+  id: string;
+  text: string;
+  doneDate: null | string;
+  tomatoes: string[];
+}
+
+interface LoGlobalState {
+  selectTaskId: string;
+  timerStatus: TimerStatus;
+  taskStatus: TaskStatus;
+  timeRest: number;
+  timeWork: number;
+  time: number;
+  todoTasks: LoTask[];
+  doneTasks: LoTask[];
 
   soundBasePath: string;
   soundNameList: string[];
@@ -156,11 +177,12 @@ const initialState: GlobalState = {
   soundWorkIndex: 0,
   soundRestIndex: 1
 };
+let latestDataToSave: GlobalState;
 
 const Context = React.createContext<ContextType>(null);
 
 export function GlobalStateProvider(props: object): JSX.Element {
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+  const [state, dispatch] = React.useReducer(reducer, getLoData());
   const value = React.useMemo(() => [state, dispatch], [state]) as ContextType;
   return <Context.Provider value={value} {...props} />;
 }
@@ -575,6 +597,9 @@ export function useGlobalState() {
     }
   }, [timerStatus, time, prevTimeStamp, dispatch, taskStatus, selectTaskId]);
 
+  // hack
+  latestDataToSave = state;
+
   return {
     state,
     startTimer,
@@ -589,3 +614,52 @@ export function useGlobalState() {
     setTotalTime
   };
 }
+
+// 持續性資料
+const LODATA_KEY = 'pomodoro_data';
+
+function getLoData(): GlobalState {
+  try {
+    let savedData = localStorage.getItem(LODATA_KEY);
+    if (!savedData) {
+      console.log('No saved local storage data found.');
+      return initialState;
+    }
+
+    const loData: LoGlobalState = JSON.parse(savedData);
+
+    const loState: GlobalState = {
+      ...loData,
+      todoTasks: loData.todoTasks.map(task => {
+        return {
+          ...task,
+          doneDate: task.doneDate ? new Date(task.doneDate) : null,
+          tomatoes: task.tomatoes.map(tomato => new Date(tomato))
+        };
+      }),
+      doneTasks: loData.doneTasks.map(task => {
+        return {
+          ...task,
+          doneDate: task.doneDate ? new Date(task.doneDate) : null,
+          tomatoes: task.tomatoes.map(tomato => new Date(tomato))
+        };
+      })
+    };
+
+    loState.timerStatus = TimerStatus.Stop;
+    loState.taskStatus = TaskStatus.Work;
+    loState.time = loState.timeWork;
+
+    return loState;
+  } catch (err) {
+    console.error(err);
+  }
+
+  return initialState;
+}
+
+function setLoData() {
+  localStorage.setItem(LODATA_KEY, JSON.stringify(latestDataToSave));
+}
+
+window.addEventListener('beforeunload', setLoData);

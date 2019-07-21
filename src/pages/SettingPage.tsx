@@ -8,7 +8,8 @@ import { useGlobalState, TaskStatus } from '../global-state';
 
 const Container = styled.div`
   position: relative;
-  width: 100%;
+  width: calc(100% - 1px);
+  margin-left: 1px;
   height: 100%;
   overflow: hidden;
   /* background: whitesmoke; */

@@ -30,6 +30,10 @@ body,
   height: 100%;
 }
 
+#root {
+  min-width: 1240px;
+}
+
 body {
   font-family: 'Taipei Sans TC Beta', sans-serif;
   font-weight: normal;
